@@ -149,6 +149,7 @@ export default defineConfig({
               translations: {
                 cs: 'FAQ a řešení problémů',
                 de: 'FAQ & Fehlerbehebung',
+                id: 'FAQ & Panduan pemecehan masalah',
                 es: 'FAQ y solución de problemas',
                 pl: 'FAQ i rozwiązywanie problemów',
                 ru: 'FAQ и устранение неполадок',
