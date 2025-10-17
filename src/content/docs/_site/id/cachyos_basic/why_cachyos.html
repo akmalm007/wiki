@@ -1,0 +1,68 @@
+<p>CachyOS adalah distribusi Arch Linux yang berfokus pada performa didesain untuk memberikan kestabilan, efisiensi, dan lingkungan komputasi yang ramah pengguna. Lalu menawarkan kekuatan penuh dan fleksibilitas dengan sistem <em>rolling-release</em>, diperkuat dengan optimasi tinggi dan seperangkat alat bantu yang mempermudah pengalaman pengguna baik untuk pengguna awam dan berpengalaman.</p>
+
+<h2 id="performa-dan-optimasi">Performa dan Optimasi</h2>
+
+<h3 id="paket-dan-repositori-yang-dioptimalkan">Paket dan Repositori yang Dioptimalkan</h3>
+
+<p>CachyOS menawarkan banyak pilihan <a href="https://packages.cachyos.org/">paket yang dioptimalkan</a> secara khusus untuk berbagai arsitektur CPU yang terbaru, termasuk sistem <code class="language-plaintext highlighter-rouge">x86-64-v3</code>, <code class="language-plaintext highlighter-rouge">x86-64-v4</code>, dan <code class="language-plaintext highlighter-rouge">Zen4+</code>, memastikan perangkat lunak yang dibuat memakai seluruh kemampuan dari kapabilitas perangkat keras untuk performa yang signifikan.</p>
+
+<p>Untuk informasi lebih lanjut mengenai optimasi repositori milik kami, lihat panduan lengkap kami <a href="/id/features/optimized_repos"><strong>Repositori yang Dioptimalkan.</strong></a></p>
+
+<h3 id="kernel-kustom-yang-disetel-untuk-performa-dan-stabilitas">Kernel Kustom yang Disetel untuk Performa dan Stabilitas</h3>
+
+<p>Selain kumpulan <em>patch</em> dasar kernel CachyOS yang menyetel berbagai parameter kernel untuk meningkatkan responsivitas desktop, CachyOS memilih kumpulan <em>patch</em> yang belum masuk ke <em>mainline</em> atau tidak disertakan dalam revisi stabil kernel.</p>
+
+<p>Oleh karena itu, <em>patch</em> ini menjalani pengujian internal sebelum dirilis kepada pengguna untuk memastikan stabilitas tidak terpengaruh. Untuk daftar lengkap <em>patch</em> yang disediakan CachyOS, lihat <a href="/id/features/kernel">Kernel</a>.</p>
+
+<h3 id="dukungan-penjadwal-cpu-kustom">Dukungan Penjadwal CPU Kustom</h3>
+
+<p>CachyOS memasukan kernel dengan optimasi penjadwalan CPU terbaru untuk memastikan kelancaran da dan dekstop yang interaktif, bahkan dengan beban yang berat.</p>
+
+<ul>
+  <li>
+    <p><strong>EEVDF (penjadwalan bawaan dari Linux kernel):</strong> Meskipun bagus untuk <em>throughput</em> pada umumnya, CachyOS kernel memasukan kustom <strong><a href="https://github.com/CachyOS/linux/blob/6.15/cachy/kernel/sched/fair.c#L79-81">EEVDF yang bisa diatur</a></strong> untuk meningkatkan reponsinitas dekstop.</p>
+  </li>
+  <li>
+    <p><strong><a href="https://github.com/firelzrd/bore-scheduler">BORE</a> (Burst-Oriented Response Enhancer):</strong> Bagi pengguna yang membutuhkan interaktivitas maksimal, kernel kami mendukung penjadwalan BORE, sebuah <em>patch</em> yang meningkatkan EEVDF dalam memberikan pengalaman yang lebih lancar ketika bebankerja yang intensif.</p>
+  </li>
+</ul>
+
+<p>Informasi lebih lanjut tentang kernels yang ditawarkan oleh CachyOS and <em>sched-ext framework</em>, lihat <strong><a href="/features/kernel">Kernel</a></strong> dan <strong><a href="/configuration/sched-ext">sched-ext</a></strong> dokumentasi.</p>
+
+<h2 id="alat-yang-ramah-pengguna-dan-kustomisasi">Alat yang ramah pengguna dan kustomisasi</h2>
+
+<h3 id="deteksi-perangkat-keras"><a href="/features/chwd">Deteksi Perangkat Keras</a></h3>
+
+<p>CachyOS menyertakan alat deteksi perangkat keras yang secara otomatis mengidentifikasi dan memasang <em>driver</em> serta paket yang diperlukan untuk setiap sistem. Dengan ini tidak perlu mencari <em>driver</em> secara manual, sehingga menghemat waktu dan tenaga setelah instalasi.</p>
+
+<h3 id="proses-instalasi-yang-dapat-disesuaikan">Proses Instalasi yang Dapat Disesuaikan</h3>
+
+<p><em>Installer</em> CachyOS memungkinkan pengguna untuk menyesuaikan sistem mereka dengan memilih <em>dekstop environment</em>, paket, <em>file-system</em>, <em>boot-manager</em>, kernel, dan lainnya agar sesuai dengan kebutuhan:</p>
+
+<ul>
+  <li><a href="/id/installation/desktop_environments/"><strong>Lingkungan Desktop</strong></a></li>
+  <li><a href="/id/installation/boot_managers/"><strong>Manajer Boot</strong></a></li>
+  <li><a href="/id/features/kernel#variants"><strong>Varian Kernel</strong></a></li>
+  <li><a href="/id/installation/filesystem"><strong>Sistem Berkas</strong></a></li>
+  <li><a href="https://github.com/CachyOS/cachyos-calamares/blob/cachyos-limine-qt6/src/modules/netinstall/netinstall.yaml"><strong>Paket Kustom yang akan disertakan selama instalasi</strong></a></li>
+</ul>
+
+<h2 id="aplikasi-cachyos">Aplikasi CachyOS</h2>
+
+<p>CachyOS mengembangkan dan memelihara seperangkat aplikasi miliknya sendiri untuk mempermudah pengelolaan sistem dan meningkatkan pengalaman anda.</p>
+
+<p>Daftar aplikasi yang saat ini dikembangkan dan dikelola oleh CachyOS:</p>
+
+<ul>
+  <li><strong><a href="https://github.com/CachyOS/CachyOS-Welcome">CachyOS Hello</a>:</strong> Aplikasi selamat datang yang mengendalikan pengaturan, memasang perbaikan, dan menginstal paket.</li>
+  <li><strong><a href="https://github.com/CachyOS/packageinstaller">CachyOS Package Installer</a>:</strong> Sebuah grafis antarmuka pengguna (GUI) untuk pemasangan aplikasi dengan mudah.</li>
+  <li><strong><a href="https://github.com/CachyOS/kernel-manager">CachyOS Kernel Manager</a>:</strong> Dengan mudah memasang kernel dari repositori, konfigurasi kernel dengan mandiri, dan mengelola <code class="language-plaintext highlighter-rouge">sched-ext</code> <em>framework</em>.</li>
+  <li><strong><a href="https://github.com/CachyOS/rate-mirrors">cachyos-rate-mirrors</a>:</strong> Secara otomatis mengurutkan Arch and CachyOS <em>mirrors</em> untuk mengunduh dengan kecepatan yang optimal dengan <code class="language-plaintext highlighter-rouge">pacman</code>.</li>
+  <li><strong><a href="https://github.com/CachyOS/systemd-boot-manager">systemd-boot-manager</a>:</strong> Secara otomatis membuat entri boot terbaru untuk <code class="language-plaintext highlighter-rouge">systemd-boot</code>, yang dapat dikonfigurasi dengan mudah lewat <code class="language-plaintext highlighter-rouge">/etc/sdboot-manage.conf</code>.</li>
+</ul>
+
+<h2 id="komunitas-yang-ramah-dan-aktif">Komunitas yang Ramah dan Aktif</h2>
+
+<p>Keunggulan utama CachyOS adalah komunitas yang terus berkembang. Setiap anggota komunitas membantu satu sama lain dengan berbagi tips, memberikan dukungan, dan berkontribusi untuk menyukseskan proyek. Masukkan anda membantu kami untuk terus meningkatkan pengalaman menggunakan CachyOS.</p>
+
+<p>Bergabunglah dengan kami dan menjadi bagian dari komunitas di <strong><a href="https://discord.com/invite/cachyos-862292009423470592">Discord CachyOS</a></strong> dan <strong><a href="https://discuss.cachyos.org/">Forum CachyOS</a></strong>.</p>

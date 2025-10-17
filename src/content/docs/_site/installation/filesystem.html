@@ -1,0 +1,205 @@
+<p>CachyOS offers 5 different filesystems to allow the user to choose what best fits their needs. The following will go over advantages, disadvantages, and recommendations for each filesystem. Each filesystem comes with its requirements/utilities preinstalled on CachyOS.</p>
+
+<p>:::note
+BTRFS is the default and recommended filesystem for CachyOS. Choose it if unsure.
+:::</p>
+
+<h2 id="xfs">XFS</h2>
+
+<p>XFS is a journaling filesystem created and developed by Silicon Graphics, Inc. It was created in 1993, ported to linux in 2001, and is now widely supported by most Linux distributions.</p>
+
+<h3 id="pros">Pros</h3>
+
+<ul>
+  <li>Fast, XFS was originally designed with speed and extreme scalability in mind.</li>
+  <li>Reliable, XFS makes use of several technologies to prevent data corruption.</li>
+  <li>Resistant to fragmentation due to its extent-based nature and delayed allocation strategy.</li>
+</ul>
+
+<h3 id="cons">Cons</h3>
+
+<ul>
+  <li>Cannot be shrunk.</li>
+</ul>
+
+<h3 id="userspace-utility">Userspace utility</h3>
+
+<p>The package containing userspace tools to manage XFS filesystems is <code class="language-plaintext highlighter-rouge">xfsprogs</code>.</p>
+
+<h3 id="recommendation">Recommendation</h3>
+
+<p>XFS is the recommended filesystem for users who do not need advanced features and simply want a fast and reliable filesystem.</p>
+
+<h2 id="btrfs">BTRFS</h2>
+
+<p>BTRFS is a modern copy-on-write(COW) filesystem created in 2007 and declared stable in the linux kernel in 2013. It is widely supported and is mainly known for its advanced feature set.</p>
+
+<h3 id="pros-1">Pros</h3>
+
+<ul>
+  <li>Transparent compression. BTRFS supports transparently compressing files to allow for significant space savings with no user intervention. <strong>CachyOS ships with ZSTD compression set to level 3 by default.</strong></li>
+  <li>Snapshot functionality. BTRFS leverages its COW nature to allow for the creation of snapshots of subvolumes that take up very little actual space.</li>
+  <li>Subvolume functionality allowing for greater control over the filesystem.</li>
+  <li>Able to grow or shrink.</li>
+  <li>Very fast development.</li>
+</ul>
+
+<h3 id="cons-1">Cons</h3>
+
+<ul>
+  <li>Sometimes requires defragmentation or balancing.</li>
+  <li>Worse on rotational drives due to aforementioned fragmentation.</li>
+</ul>
+
+<h3 id="userspace-utility-1">Userspace utility</h3>
+
+<p>Btrfs userspace utility package is <code class="language-plaintext highlighter-rouge">btrfs-progs</code></p>
+
+<h3 id="subvolume-layout">Subvolume Layout</h3>
+
+<p>CachyOS provides a subvolume layout out of the box to allow easy snapshot functionality.</p>
+
+<ul>
+  <li>Subvol @ = /</li>
+  <li>Subvol @home = /home</li>
+  <li>Subvol @root = /root</li>
+  <li>Subvol @srv = /srv</li>
+  <li>Subvol @cache = /var/cache</li>
+  <li>Subvol @tmp = /var/tmp</li>
+  <li>Subvol @log = /var/log</li>
+</ul>
+
+<h3 id="recommendation-1">Recommendation</h3>
+
+<p>BTRFS is recommended for users who want snapshot/backup functionality and transparent compression.</p>
+
+<h2 id="ext4">EXT4</h2>
+
+<p>EXT4 (fourth extended filesystem) is the most commonly used Linux filesystem. EXT4 was made stable in the linux kernel in 2008.</p>
+
+<h3 id="pros-2">Pros</h3>
+
+<ul>
+  <li>Very common, allowing easy access to plenty of resources.</li>
+  <li>Reliable. EXT4 has a proven track record of being very reliable.</li>
+  <li>Able to grow or shrink.
+    <ul>
+      <li>Shrinking is only supported offline and requires the filesystem to be unmounted.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="cons-2">Cons</h3>
+
+<ul>
+  <li>Built on an old code base.</li>
+  <li>Lacks many of the advanced features other filesystems offer.</li>
+</ul>
+
+<h3 id="userspace-utilities">Userspace utilities</h3>
+
+<p>The package to manage ext4 is <code class="language-plaintext highlighter-rouge">e2fsprogs</code></p>
+
+<h3 id="recommendation-2">Recommendation</h3>
+
+<p>EXT4 is recommended for users who want the simplest and most commonly used filesystem.</p>
+
+<h2 id="zfs">ZFS</h2>
+
+<p>ZFS is an advanced filesystem originally developed by Sun Microsystems in 2005. ZFS has many features, but is licensed under CDDL which means it cannot be included inside the linux kernel and requires a separate module installed.</p>
+
+<p>:::caution
+Do not use a Real-time kernel together with ZFS, it’s not compatible due to licensing issues.
+:::</p>
+
+<h3 id="pros-3">Pros</h3>
+
+<ul>
+  <li>Pooled storage (zpool)</li>
+  <li>Snapshots using COW</li>
+  <li>Compression</li>
+  <li>Raid-Z support</li>
+  <li>ARC cache allows insanely fast read times on commonly accessed files.</li>
+</ul>
+
+<h3 id="cons-3">Cons</h3>
+
+<ul>
+  <li>Very complicated to use and understand due to features like zpool and ARC.</li>
+  <li>ARC requires a lot of ram to be effective.</li>
+  <li>Not included in the linux kernel therefore dependent on a third party kernel module (OpenZFS)</li>
+  <li>Incompatible with Real-time preemption</li>
+</ul>
+
+<h3 id="required-tools">Required tools</h3>
+
+<p>‘ZFS-Module’ CachyOS provides a precompiled zfs module for each kernel version.
+<code class="language-plaintext highlighter-rouge">zfs-utils</code> for the userspace utilities.</p>
+
+<h3 id="recommendation-3">Recommendation</h3>
+
+<p>ZFS should only be used by advanced users who want to use its advanced features, such as pooled storage or the ARC cache.</p>
+
+<h2 id="f2fs">F2FS</h2>
+
+<p>F2FS (Flash-Friendly File System) is a flash file system originally created and developed by Samsung for the linux kernel. F2FS was created to cater specifically for the NAND flash used in modern day storage.</p>
+
+<h3 id="pros-4">Pros</h3>
+
+<ul>
+  <li>Designed with flash friendliness in mind.</li>
+  <li>Transparent compression used to reduce disk writes (space savings not currently usable by the user).</li>
+  <li>Faster than other filesystems like EXT4.</li>
+  <li>Better wear leveling, which further prolongs the life of NAND flash.</li>
+</ul>
+
+<h3 id="cons-4">Cons</h3>
+
+<ul>
+  <li>Cannot shrink.</li>
+  <li>Space savings from compression cannot currently be used by the user. This may be added in the future.</li>
+  <li>Relatively weak fsck (filesystem check).</li>
+  <li>Downgrading to a kernel older than the version that created the filesystem may cause issues.</li>
+  <li>Requires a workaround when used with GRUB on MBR/BIOS system.</li>
+</ul>
+
+<h3 id="userspace-utilities-1">Userspace utilities</h3>
+
+<p>The main utility for f2fs is <code class="language-plaintext highlighter-rouge">f2fs-tools</code></p>
+
+<h3 id="recommendation-4">Recommendation</h3>
+
+<ul>
+  <li>F2FS is recommended for users who want to maximize the lifespan of their NAND flash devices.</li>
+  <li>Limine is the recommended bootloader for F2FS users on MBR/BIOS systems since it does not require a workaround like GRUB does.</li>
+</ul>
+
+<h2 id="bcachefs">BcacheFS</h2>
+
+<p>Bcachefs is an advanced new filesystem for Linux, with an emphasis on reliability and robustness and the complete set of features one would expect from a modern filesystem.</p>
+
+<p>:::caution[ATTENTION]
+Bcachefs is still considered as experimental and may have issues.
+:::</p>
+
+<h3 id="pros-5">Pros</h3>
+
+<ul>
+  <li>Copy on write (CoW) - like BTRFS or ZFS</li>
+  <li>Compression</li>
+  <li>Caching, Data Placement</li>
+  <li>Replication</li>
+  <li>Scalable</li>
+</ul>
+
+<h3 id="cons-5">Cons</h3>
+
+<ul>
+  <li>Experimental</li>
+  <li>Setup can be complicated</li>
+</ul>
+
+<h2 id="tldr">TL:DR</h2>
+
+<p>Use the default filesystem <strong>BTRFS</strong> as it is considered stable and has a lot of neat features (snapshots, compression, etc). Use <strong>XFS</strong> or <strong>EXT4</strong> for a simple
+and fast filesystem.</p>

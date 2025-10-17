@@ -16,7 +16,7 @@ ISO CachyOS dapat diperoleh dari sumber-sumber berikut:
 ## Memverifikasi integritas ISO dengan SHA256
 
 :::caution[PERINGATAN]
-Selalu luangkan waktu sejenak untuk memverifikasi integritas ISO agar terhindar dari masalah yang tidak diinginkan saat instalasi atau saat membuat media bootable.
+Selalu ambil tindakan untuk memverifikasi integritas ISO untuk menghindari masalah yang tidak diinginkan saat instalasi atau saat membuat media bootable.
 :::
 
 **Versi ISO Saat Ini:** `250828`
@@ -30,7 +30,7 @@ Selalu luangkan waktu sejenak untuk memverifikasi integritas ISO agar terhindar 
 <Steps>
 
 1. Unduh [berkas](https://mirror.cachyos.org/ISO/desktop/250828/cachyos-desktop-linux-250828.iso.sha256) yang berisi hash SHA256 **(Buka dengan Editor Teks, misal: Notepad).**
-2. Buka CMD atau PowerShell sebagai Administrator dan [arahkan](<https://www.wikihow.com/Change-Directories-in-Command-Prompt>) ke path tempat berkas ISO dan SHA256 disimpan.
+2. Buka CMD atau PowerShell sebagai Administrator dan [arahkan](<https://www.wikihow.com/Change-Directories-in-Command-Prompt>) ke tempat berkas ISO dan SHA256 disimpan.
 3. Jalankan perintah berikut:
    ```powershell
    # Contoh:
@@ -102,12 +102,12 @@ Untuk memverifikasi keaslian berkas ISO dan memastikan bahwa berkas tersebut ben
    gpg --keyserver hkps://keys.openpgp.org --recv-key F3B607488DB35A47
    ```
 
-2. Unduh berkas ISO beserta berkas signature `.sig`-nya, lalu jalankan perintah berikut (dengan mengganti `nama_lengkap_iso.iso` dengan nama berkas ISO yang sebenarnya):
+2. Unduh berkas ISO beserta berkas signature [.sig-nya](https://cdn77.cachyos.org/ISO/desktop/250828/cachyos-desktop-linux-250828.iso.sig), lalu jalankan perintah berikut (dengan mengganti `nama_lengkap_iso.iso` dengan nama berkas ISO yang sebenarnya):
    ```shell
    gpg --verify nama_lengkap_iso.iso.sig nama_lengkap_iso.iso
    ```
 
-   Jika Anda mendapatkan keluaran **Good signature** (tanda tangan baik), berarti berkas ISO tersebut asli:
+   Jika Anda mendapatkan hasil **Good signature** (tanda tangan baik), berarti berkas ISO tersebut asli:
    ```
    gpg: Signature made jue 28 ago 2025 10:41:14 -03
    gpg:                using RSA key 882DCFE48E2051D48E2562ABF3B607488DB35A47
@@ -120,6 +120,6 @@ Untuk memverifikasi keaslian berkas ISO dan memastikan bahwa berkas tersebut ben
 </Steps>
 
 :::danger
-Jika keluarannya tidak menampilkan string **Good signature** atau ID kuncinya tidak cocok, jangan gunakan image ISO tersebut dan pastikan image yang diunduh berasal
+Jika keluarannya tidak menampilkan tulisan **Good signature** atau ID kuncinya tidak cocok, jangan gunakan image ISO tersebut dan pastikan image yang diunduh berasal
 dari sumber CachyOS yang sah. Tanda tangan yang buruk dapat mengindikasikan bahwa image yang diunduh telah diubah.
 :::

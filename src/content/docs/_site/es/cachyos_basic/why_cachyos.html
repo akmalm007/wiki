@@ -1,0 +1,68 @@
+<p>CachyOS es una distribución de Arch Linux centrada en el rendimiento, diseñada para ofrecer un entorno informático estable, eficiente y fácil de usar. Ofrece toda la potencia y flexibilidad de un sistema de lanzamiento continuo (rolling-release), mejorado con optimizaciones avanzadas y una cadena de herramientas personalizada que simplifica la experiencia tanto para usuarios nuevos como experimentados.</p>
+
+<h2 id="rendimiento-y-optimización">Rendimiento y optimización</h2>
+
+<h3 id="paquetes-y-repositorios-optimizados">Paquetes y repositorios optimizados</h3>
+
+<p>CachyOS proporciona una gran selección de <strong><a href="https://packages.cachyos.org/">paquetes optimizados</a></strong> compilados específicamente para diversas arquitecturas de CPU modernas. Esto incluye soporte para sistemas <code class="language-plaintext highlighter-rouge">x86-64-v3</code>, <code class="language-plaintext highlighter-rouge">x86-64-v4</code> y <code class="language-plaintext highlighter-rouge">Zen4+</code>, asegurando que tu software esté construido para aprovechar al máximo las capacidades de tu hardware y obtener un aumento significativo en el rendimiento.</p>
+
+<p>Para una visión más detallada de nuestros repositorios optimizados, consulta nuestra guía detallada sobre <strong><a href="/es/features/optimized_repos">Repositorios Optimizados</a></strong>.</p>
+
+<h3 id="kernel-personalizado-y-ajustado-para-rendimiento-y-estabilidad">Kernel personalizado y ajustado para rendimiento y estabilidad</h3>
+
+<p>Además del conjunto de parches base del kernel de CachyOS que ajusta varios parámetros del kernel para mejorar la capacidad de respuesta del escritorio, CachyOS selecciona cuidadosamente conjuntos de parches que no han sido incorporados en la rama principal o que no están incluidos en la revisión estable del kernel.</p>
+
+<p>Por lo tanto, estos parches se someten a pruebas internas antes de ser lanzados a los usuarios para garantizar que la estabilidad no se vea afectada. Para obtener una lista completa de los parches que proporciona CachyOS, consulta <a href="/es/features/kernel">Kernel</a>.</p>
+
+<h3 id="soporte-para-planificadores-de-cpu-avanzados">Soporte para planificadores de CPU avanzados</h3>
+
+<p>CachyOS incluye kernels con las últimas optimizaciones en el planificador de CPU para asegurar un escritorio fluido e interactivo, incluso bajo cargas pesadas.</p>
+
+<ul>
+  <li>
+    <p><strong>EEVDF (el planificador por defecto del kernel de Linux):</strong> Aunque es excelente para el rendimiento general, el kernel de CachyOS incluye <strong><a href="https://github.com/CachyOS/linux/blob/6.15/cachy/kernel/sched/fair.c#L79-81">ajustes personalizados para EEVDF</a></strong> para mejorar la capacidad de respuesta del escritorio.</p>
+  </li>
+  <li>
+    <p><strong><a href="https://github.com/firelzrd/bore-scheduler">BORE</a> (Burst-Oriented Response Enhancer):</strong> Para los usuarios que necesitan la máxima interactividad, nuestros kernels soportan el planificador BORE, un conjunto de parches que mejora EEVDF para ofrecer una experiencia más fluida durante cargas de trabajo intensivas.</p>
+  </li>
+</ul>
+
+<p>Para más información sobre los kernels ofrecidos por CachyOS y el framework sched-ext, consulta la documentación de <strong><a href="/es/features/kernel">Kernel</a></strong> y <strong><a href="/es/configuration/sched-ext">sched-ext</a></strong>.</p>
+
+<h2 id="herramientas-fáciles-de-usar-y-personalización">Herramientas fáciles de usar y personalización</h2>
+
+<h3 id="detección-automática-de-hardware"><a href="/es/features/chwd">Detección automática de hardware</a></h3>
+
+<p>CachyOS incluye una herramienta personalizada de detección de hardware que identifica e instala automáticamente los controladores y paquetes necesarios para tu sistema. Esto elimina la necesidad de buscar controladores manualmente, ahorrándote tiempo y esfuerzo después de la instalación.</p>
+
+<h3 id="proceso-de-instalación-personalizable">Proceso de instalación personalizable</h3>
+
+<p>El instalador de CachyOS permite a los usuarios personalizar su sistema eligiendo el entorno de escritorio, paquetes, sistema de archivos, gestor de arranque, kernel y más para adaptarse a sus necesidades:</p>
+
+<ul>
+  <li><a href="/es/installation/desktop_environments/">Entornos de escritorio</a></li>
+  <li><a href="/es/installation/boot_managers/">Gestores de arranque</a></li>
+  <li><a href="/es/features/kernel#variantes">Variantes del kernel</a></li>
+  <li><a href="/es/installation/filesystem">Sistemas de archivos</a></li>
+  <li><a href="https://github.com/CachyOS/cachyos-calamares/blob/cachyos-limine-qt6/src/modules/netinstall/netinstall.yaml">Paquetes personalizados para incluir durante la instalación</a></li>
+</ul>
+
+<h3 id="aplicaciones-personalizadas-de-cachyos">Aplicaciones personalizadas de CachyOS</h3>
+
+<p>CachyOS desarrolla y mantiene su propio conjunto de aplicaciones para simplificar la gestión del sistema y mejorar tu experiencia.</p>
+
+<p>Lista de aplicaciones que CachyOS desarrolla y mantiene actualmente:</p>
+
+<ul>
+  <li><strong><a href="https://github.com/CachyOS/CachyOS-Welcome">CachyOS Hello</a>:</strong> Una aplicación de bienvenida para controlar ajustes, aplicar correcciones e instalar paquetes.</li>
+  <li><strong><a href="https://github.com/CachyOS/packageinstaller">CachyOS Package Installer</a>:</strong> Una interfaz gráfica de usuario (GUI) para la fácil instalación de aplicaciones.</li>
+  <li><strong><a href="https://github.com/CachyOS/kernel-manager">CachyOS Kernel Manager</a>:</strong> Instala fácilmente kernels desde el repositorio, configura el tuyo propio y gestiona el framework <code class="language-plaintext highlighter-rouge">sched-ext</code>.</li>
+  <li><strong><a href="https://github.com/CachyOS/rate-mirrors">cachyos-rate-mirrors</a>:</strong> Clasifica automáticamente los espejos de Arch y CachyOS para obtener velocidades de descarga óptimas con <code class="language-plaintext highlighter-rouge">pacman</code>.</li>
+  <li><strong><a href="https://github.com/CachyOS/systemd-boot-manager">systemd-boot-manager</a>:</strong> Genera automáticamente nuevas entradas de arranque para <code class="language-plaintext highlighter-rouge">systemd-boot</code>, que pueden configurarse fácilmente a través de <code class="language-plaintext highlighter-rouge">/etc/sdboot-manage.conf</code>.</li>
+</ul>
+
+<h2 id="una-comunidad-amigable-y-activa">Una comunidad amigable y activa</h2>
+
+<p>La mayor fortaleza de CachyOS es su comunidad en expansión. Los miembros de la comunidad se ayudan mutuamente compartiendo consejos, brindando apoyo y contribuyendo al éxito del proyecto. Tus comentarios nos ayudan a mejorar continuamente la experiencia de CachyOS.</p>
+
+<p>Únete a nosotros y forma parte de la comunidad en el <strong><a href="https://discord.com/invite/cachyos-862292009423470592">Discord de CachyOS</a></strong> y en el <strong><a href="https://discuss.cachyos.org/">Foro de CachyOS</a></strong>.</p>

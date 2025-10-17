@@ -1,0 +1,38 @@
+<h1 id="опишите-вашу-проблему">Опишите вашу проблему</h1>
+
+<ul>
+  <li><em>Что не работает?</em></li>
+  <li><em>Исправляет ли проблему понижение версии пакета X?</em></li>
+  <li><em>Воспользуйтесь поиском, чтобы найти похожие проблемы</em></li>
+  <li><em>Вносили ли вы изменения самостоятельно?</em>
+    <ul>
+      <li>Пример: <code class="language-plaintext highlighter-rouge">Добавление дополнительного флага в файл modprobe</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="предоставьте-логи">Предоставьте логи</h1>
+
+<p>В CachyOS есть отличный инструмент для сбора системных логов под названием <code class="language-plaintext highlighter-rouge">cachyos-bugreport.sh</code>.
+Этот инструмент соберёт логи из:</p>
+
+<ul>
+  <li>dmesg</li>
+  <li>journalctl</li>
+  <li>inxi <code class="language-plaintext highlighter-rouge">(для сбора информации об оборудовании)</code></li>
+</ul>
+
+<p>Когда логи будут собраны, пользователю будет предложено загрузить их на наш paste-сайт.</p>
+
+<p><strong>Выполните следующую команду в терминале и вставьте полученную ссылку в свою тему:</strong></p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>cachyos-bugreport.sh
+</code></pre></div></div>
+
+<h1 id="куда-отправлять-отчёт">Куда отправлять отчёт</h1>
+
+<ul>
+  <li>Github: <a href="https://github.com/CachyOS/distribution">https://github.com/CachyOS/distribution</a></li>
+  <li>Форум: <a href="https://discuss.cachyos.org/c/feedback/bugreports/10">https://discuss.cachyos.org/c/feedback/bugreports/10</a></li>
+  <li>Discord: <a href="https://discord.com/channels/862292009423470592/862294383470051348">Канал поддержки</a></li>
+</ul>

@@ -13,6 +13,6 @@ Dilarang keras melanggar aturan di bawah ini.
 6. Dilarang memasang iklan sumber lain tanpa izin.
 7. Dilarang menyamar sebagai orang lain.
 8. Dilarang spam.
-9. Dilarang memancing konlik antar anggota.
+9. Dilarang memancing konflik antar anggota.
 10. Ini adalah tempat yang aman bagi anggota LGBTQ+, maka dilarang keras untuk memprovokasi dan meleceh anggota LGBTQ+.
 

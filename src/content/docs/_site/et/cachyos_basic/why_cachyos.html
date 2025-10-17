@@ -1,0 +1,60 @@
+<p>CachyOS pakub lihvitud ja terviklikku Arch Linuxi kogemust koos kasutajasõbraliku paigaldaja, eelhäälestatud töölaudade ja jõudlust optimeerivate lahendustega, tegemata seejuures järeleandmisi süsteemi kasutuskogemuses ega turvalisuses.</p>
+
+<p>Allpool on toodud mõned CachyOS-i olulisemad omadused, mis tagavad parema töölauaelamuse.</p>
+
+<h2 id="optimeeritud-paketid-ja-tarkvarahoidlad">Optimeeritud paketid ja tarkvarahoidlad</h2>
+
+<p>CachyOS pakub suurt valikut optimeeritud pakette erinevate riistvarakonfiguratsioonide jaoks, sealhulgas <code class="language-plaintext highlighter-rouge">x86-64-v3</code>, <code class="language-plaintext highlighter-rouge">x86-64-v4</code> ja <code class="language-plaintext highlighter-rouge">Zen4+</code> süsteemidele, et parandada üldist jõudlust.</p>
+
+<p>Lisateabe saamiseks vaata <a href="/et/features/optimized_repos"><strong>Optimeeritud tarkvarahoidlad.</strong></a></p>
+
+<h2 id="jõudlusele-ja-stabiilsusele-häälestatud-tuum">Jõudlusele ja stabiilsusele häälestatud tuum</h2>
+
+<p>Lisaks CachyOS-i tuuma põhipaigakomplektile, mis kohandab erinevaid tuuma parameetreid, et parandada töölaua reageerimisvõimet, valib CachyOS hoolikalt välja ka paigakomplekte, mida pole veel põhivoolustatud või mis ei kuulu tuuma stabiilsesse versiooni.</p>
+
+<p>Seetõttu läbivad need paigad sisemise testimise, enne kui need kasutajatele väljastatakse, et tagada stabiilsuse säilimine. CachyOS-i pakutavate paikade täieliku nimekirja leiate siit: <a href="/et/features/kernel">Tuum</a>.</p>
+
+<h2 id="kohandatud-protsessoriplaaniuri-tugi">Kohandatud protsessoriplaaniuri tugi</h2>
+
+<p>Vaikimisi on EEVDF häälestatud jaotama saadaolevat protsessoriaega õiglaselt kõigi ülesannete vahel ning see on peamiselt suunatud läbilaskepõhistele töökoormustele. CachyOS-i tuum <a href="https://github.com/CachyOS/linux/blob/6.15/cachy/kernel/sched/fair.c#L79-81"><strong>konfigureerib mõningaid EEVDF-i parameetreid</strong></a>, et eelistada töölaua interaktiivsust.</p>
+
+<p>Siiski ei olnud EEVDF oma olemuselt mõeldud töölaua interaktiivsuse jaoks. Seda silmas pidades tarnib CachyOS tuumasid, mis on paigatud <a href="https://github.com/firelzrd/bore-scheduler">BORE (Burst-Oriented Response Enhancer)</a> plaaniuriga, mis täiustab EEVDF-i, et parandada interaktiivsust suurte töökoormuste korral.</p>
+
+<p>Versioonis 6.12 tõi Linuxi tuum kaasa võimaluse vahetada käigult BPF-plaaniure ja asendada EEVDF mõne teise plaaniuriga.</p>
+
+<p>Lisateavet CachyOS-i pakutavate tuumade ja sched-ext plaaniuride kohta leiate siit: <a href="/et/features/kernel">Tuum</a> ja <a href="/et/configuration/sched-ext">sched-ext</a>.</p>
+
+<h2 id="riistvara-tuvastamine">Riistvara tuvastamine</h2>
+
+<p>CachyOS sisaldab omaenda riistvara tuvastamise tööriista, mis automaatselt tuvastab ja paigaldab iga süsteemi jaoks vajalikud draiverid ja paketid, lihtsustades kasutajate jaoks paigaldusjärgset protsessi.</p>
+
+<h2 id="kohandatav-paigaldusprotsess">Kohandatav paigaldusprotsess</h2>
+
+<p>CachyOS-i paigaldaja laseb kasutajatel oma süsteemi kohandada, valides vastavalt oma vajadustele töölauakeskkonna, paketid, failisüsteemi, alglaaduri, tuuma ja palju muud:</p>
+<ul>
+  <li><a href="/et/installation/desktop_environments/"><strong>Töölauakeskkonnad</strong></a></li>
+  <li><a href="/et/installation/boot_managers/"><strong>Alglaadurid</strong></a></li>
+  <li><a href="/et/features/kernel#variants"><strong>Tuuma variandid</strong></a></li>
+  <li><a href="/et/installation/filesystem"><strong>Failisüsteemid</strong></a></li>
+  <li><a href="https://github.com/CachyOS/cachyos-calamares/blob/cachyos-limine-qt6/src/modules/netinstall/netinstall.yaml"><strong>Kohandatud paketid, mida paigaldamise ajal kaasata</strong></a></li>
+</ul>
+
+<h2 id="cachyos-i-rakendused">CachyOS-i rakendused</h2>
+
+<p>Vaikimisi pakub CachyOS oma rakenduste komplekti, nagu CachyOS Hello ja CachyOS Package Installer.</p>
+
+<p>Nimekiri rakendustest, mida CachyOS hetkel arendab ja haldab:</p>
+
+<ul>
+  <li><a href="https://github.com/CachyOS/kernel-manager"><strong>CachyOS Kernel Manager</strong></a>: Paigaldage hõlpsalt tuumasid tarkvarahoidlast või konfigureerige oma tuum, lisades oma paiku ja hallates isegi sched-ext raamistikku <a href="https://github.com/sched-ext/scx/tree/main/rust/scx_loader"><strong>scx_loader</strong></a> abil.</li>
+  <li><a href="https://github.com/CachyOS/CachyOS-Welcome"><strong>CachyOS Hello</strong></a>: Rakendus seadistuste haldamiseks, paranduste rakendamiseks, pakettide paigaldamiseks ja lisateabe saamiseks CachyOS-i kohta.</li>
+  <li><a href="https://github.com/CachyOS/packageinstaller"><strong>CachyOS Package Installer</strong></a>: Graafiline kasutajaliides rakenduste lihtsaks paigaldamiseks.</li>
+  <li><a href="https://github.com/CachyOS/rate-mirrors"><strong>cachyos-rate-mirrors</strong></a>: Seab automaatselt Arch ja CachyOS peegelserverid pingeritta, et tagada pacmaniga optimaalsed allalaadimiskiirused.</li>
+  <li><a href="https://github.com/CachyOS/systemd-boot-manager"><strong>systemd-boot-manager</strong></a>: Loob automaatselt uusi kirjeid systemd-boot-managerile ja seda saab hõlpsasti konfigureerida failis <code class="language-plaintext highlighter-rouge">/etc/sdboot-manage.conf</code>.</li>
+</ul>
+
+<h2 id="sõbralik-ja-aktiivne-kogukond">Sõbralik ja aktiivne kogukond</h2>
+
+<p>CachyOS-i suurim tugevus on selle laienev kogukond. Ilma nende toetuseta poleks CachyOS saavutanud oma praegust edu. Kogukonna liikmed aitavad üksteist, jagades näpunäiteid ja nippe Linuxi kasutuskogemuse parandamiseks.</p>
+
+<p>Liitu meiega <a href="https://discord.com/invite/cachyos-862292009423470592"><strong>CachyOS-i Discordis</strong></a> ja <a href="https://discuss.cachyos.org/"><strong>CachyOS-i foorumis</strong></a>.</p>

@@ -1,0 +1,298 @@
+---
+title: CachyOS FAQ & panduan pemecahan masalah
+description: Pertanyaan yang sering ditanyakan and tips
+tableOfContents:
+  minHeadingLevel: 1
+  maxHeadingLevel: 4
+---
+
+import ImageComponent from '~/components/image-component.astro';
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+:::note
+Pertanyaan dan jawaban berikut ini berlaku untuk CachyOS and distribusi berbasis Arch. `Ini tidak dimaksudkan untuk menggantikan informasi yang ada di Wiki Arch Linux`
+:::
+
+## Instalasi & Lingkungan *Live*
+
+### Why does the CachyOS live ISO only include KDE Plasma?
+
+Kami memutuskan untuk fokus sepenuhnya pada pengembangan dan pemeliharaan secara khusus kepada KDE Plasma *desktop environment*. Hal ini membuat kami bisa menyediakan pengalaman pengguna yang lebih lancar, stabil, dan konsisten pada live ISO milik kami.
+
+Lingkungan *Live* ditunjukkan untuk instalasi CachyOS atau menggunakan cachy-chroot untuk pemulihan sistem. Untuk cara yang aman dalam menguji *desktop environments* yang lain atau *window managers*, kami sangat merekomendasikan untuk mencobanya di dalam virtual machine (VM).
+
+### Kenapa *installer* membutuhkan waktu lama untuk memulai setelah tekan "Launch Installer"?
+
+:::caution
+Pastikan anda memiliki koneksi internet yang aktif/berjalan, jika tidak, tidak terjadi apa apa ketika anda menekan tombol ini.
+:::
+
+*Installer*-nya tidak macet. Namun sedang menjalankan skrip di belakang layar untuk mempersiapkan instalasi. Proses ini memastikan sistem *keyring* dan jam anda adalah yang terbaru, yang membantu untuk mencegah isu yang biasa terjadi ketika instalasi. 
+
+[Lihat skrip di dalam GitHub](https://github.com/CachyOS/CachyOS-Live-ISO/blob/master/archiso/airootfs/usr/local/bin/calamares-online.sh) untuk mendapatkan pemahaman lebih tentang apa yang dilakukan.
+<Steps>
+  1. Hapus berkas *keyring* yang lama.
+  2. Instal dan perbarui paket *keyring* dari Arch & CachyOS yang terbaru.
+  3. Inisialisasi dan isi *keyring* dari pacman.
+  4. Mengaktifkan sinkronisasi waktu jaringan.
+  5. Memeriksa jenis boot dari sistem anda (UEFI atau BIOS/MBR) untuk meminta pengguna memilih *bootloader* sesuai dengan jenisnya.
+</Steps>
+
+Inilah kenapa memerlukan waktu yang sedikit lebih lama untuk memulai *installer*.
+
+### Mengapa instalasi saya berhenti pada 33%
+
+Hal itu terjadi ketika *installer* kesulitan dalam mengunduh paket. Biasanya adalah tanda dari koneksi internet yang lambat atau tidak stabil. Silahkan untuk periksa kembali jaringan koneksi anda dan coba lagi.
+
+## Bootloader Pemulihan
+
+:::note[Jika partisi /boot terhapus. Silahkan membuat partisi yang baru mengikuti skema partisi yang sesuai [skema partisi](/installation/installation_on_root#uefigpt) dari langkah 5.]
+:::
+
+### Langkah untuk pemulihan bootlader
+
+<Steps>
+    1. Boot kedalam CachyOS Live ISO.
+    2. Buka terminal dan chroot kedalam instalasi sistem menggunakan perintah `cachy-chroot`.
+
+        ```bash
+        sudo cachy-chroot
+        ```
+        Jika sistem anda menggunakan BTRFS dengan pengaturan bawaan kami, masukan `y` pada prompt:
+         ```bash title='Contoh'
+         Do you want to use CachyOS BTRFS preset to auto mount root subvolume? y
+         Do you want to mount additional partitions? · yes
+         Enter the mount point for additional partition (e.g. /boot) type 'skip' to cancel:
+         # Ketik /boot untuk systemd-boot, Limine atau rEFInd
+         # Ketik /boot/efi untuk GRUB
+         ```
+    3. Ikuti petunjuk di bawah untuk bootlader yang terpasang dan jenis sistem anda (UEFI or MBR/BIOS).
+        <Tabs>
+            <TabItem label='GRUB'>
+                Install ulang GRUB mengikuti perintah berikut:
+                <Tabs>
+                    <TabItem label='UEFI'>
+                        ```bash
+                        sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=cachyos
+                        ```
+                    </TabItem>
+                    <TabItem label='MBR/BIOS'>
+                        ```bash
+                        sudo grub-install --target=i386-pc /dev/sdX # Ganti sdX dengan disk anda, contoh sda
+                        ```
+                    </TabItem>
+                </Tabs>
+            </TabItem>
+            <TabItem label='systemd-boot (untuk UEFI)'>
+                Install ulang systemd-boot mengikuti perintah berikut:
+                ```bash
+                sudo bootctl install
+                ```
+            </TabItem>
+            <TabItem label='Limine'>
+                Install ulang Limine mengikuti perintah berikut:
+                <Tabs>
+                    <TabItem label='UEFI'>
+                        ```bash
+                        sudo limine-install
+                        ```
+                    </TabItem>
+                    <TabItem label='MBR/BIOS'>
+                        ```bash
+                        sudo limine bios-install /dev/sdX # Ganti sdX dengan disk anda, contoh sda
+                        ```
+                    </TabItem>
+                </Tabs>
+            </TabItem>
+            <TabItem label='rEFInd (untuk UEFI)'>
+                Install ulang rEFInd mengikuti perintah berikut:
+                ```bash
+                sudo refind-install
+                ```
+            </TabItem>
+        </Tabs>
+    4. Install kembali CachyOS kernel:
+        ```bash
+        sudo pacman -Syu linux-cachyos linux-cachyos-headers
+        ```
+    5. Keluar dar cachy-chroot:
+        ```bash
+        exit
+        ```
+    6. Mulai ulang sistem anda.
+</Steps>
+
+## Pengelolaan Paket & Pembaruan
+
+### Pacman Pemecehanan Masalah
+
+#### error: signature is invalid
+
+*Error* ini menandakan masalah dengan kriptografis *signature* dari paket. Hal ini disebabkan oleh *mirror* yang sudah usang atau *keyring* yang rusak di dalam sistem anda.
+
+Meskipun *mirror* bisa memperbaiki dirinya sendiri setelah beberapa saat, jika tetap berlanjut, anda sebaiknya mencoba salah satu dari solusi yang diberikan.
+
+<Tabs>
+
+<TabItem label='Solusi Pertama: Resync Pacman Mirrors'>
+
+```sh
+sudo pacman -Syu
+```
+
+</TabItem>
+
+<TabItem label='Solusi Kedua: Mengurutkan Mirrors Anda'>
+
+```sh title='Rate your mirrors'
+sudo cachyos-rate-mirrors
+```
+
+</TabItem>
+
+<TabItem label='Solusi Ketiga: Reset Keyrings'>
+
+Jika mengurutkan *mirror* anda tidak bekerja, Kemungkinan besar sistem *keyring* anda rusak.
+
+- Buka CachyOS Hello dan navigasi ke **Apps/Tweaks**.
+- Tekan tombol Reset keyrings.
+
+</TabItem>
+
+</Tabs>
+
+#### error: 404 Not Found
+
+*Error* ini berarti paket yang ingin Anda instal tidak tersedia pada mirror saat ini. Ini biasanya terjadi ketika basis data lokal paket milik anda tidak sinkron dengan *remote* repositori.
+
+**Solusi:**
+
+Jalankan perintah berikut untuk memperbarui basis data paket anda dan pembaruan sistem secara penuh. Ini akan memastikan sistem Anda tahu tentang paket terbaru yang tersedia.
+
+```sh
+sudo pacman -Syu
+# Setelah ini coba instal kembali paket yang anda ingikan.
+```
+
+#### error: could not remove
+
+*Error* ini terjadi ketika pacman *cache* mengandung berkas yang tidak bisa dikelola secara otomatis oleh sistem. Isu adalah masalah umum yang dapat dengan mudah diperbaiki.
+
+- Solusi 1: Gunakan CachyOS Hello.
+  - Cara termudah untuk memperbaiki ini adalah dengan CachyOS Hello. Buka aplikasi tersebut dan pergi ke **Apps/Tweaks**, kemudian tekan tombol **Clear package cache**.
+
+- Solusi 2: Secara manual menghapus *cache*.
+  - Jalankan perintah berikut untuk menghapus semua paket terlantar dari *cache*.
+  ```sh
+  sudo rm -r /var/cache/pacman/pkg/*
+  ```
+
+#### error: File is corrupted (invalid or corrupted package (PGP signature))
+
+```sh
+# Contoh:
+:: File /var/cache/pacman/pkg/python-charset-normalizer-3.4.0-1-any.pkg.tar.zst
+is corrupted (invalid or corrupted package (PGP signature)).
+```
+
+*Error* ini biasanya menandakan masalah dengan pacman *keyring* di sistem Anda, yang digunakan untuk menverifikasi keaslian dari paket. Perintah berikut akan mereset and mengisi ulang *keyring* untuk menyelesaikan isu.
+
+```sh
+sudo rm -rf /etc/pacman.d/gnupg/
+sudo pacman-key --init
+sudo pacman-key --populate
+
+sudo pacman-key --recv-keys F3B607488DB35A47 --keyserver keyserver.ubuntu.com
+sudo pacman-key --lsign-key F3B607488DB35A47
+
+sudo rm -R /var/lib/pacman/sync
+```
+
+#### error: unable to lock database
+
+*Error* ini terjadi ketika proses pacman yang lain terlah berjalan, yang bertujuan mengunci basis data untuk mencegah kerusakan. Jika proses sebelumnya *crash* atau terganggu, berkas kunci `db.lck` kemungkinan belum dihapus.
+
+- Solusi 1: Gunakan CachyOS Hello
+  - Cara termudah untuk memperbaiki ini adalah dengan fungsi **Remove db lock** di tab **Apps/Tweaks** dari CachyOS Hello
+
+- Solusi 2: Menghapus berkas kunci secara manual
+  - Jika Anda tidak ingin menggunakan CachyOS Hello, Anda bisa menghapus berkas kunci secara manual:
+
+```sh
+sudo rm /var/lib/pacman/db.lck
+```
+
+#### error: failed retrieving file ... Connection timed out
+
+Kemungkinan Anda pernah melihat *error* sepert ini:
+
+```text
+# Example errors:
+error: failed retrieving file '...' from ... : Connection timed out
+error: failed retrieving file '...' from ... : Couldn't resolve host name
+error: failed retrieving file '...' from ... : The requested URL returned error: 526
+```
+
+These errors almost always indicate a problem with your current mirrors. They may be slow, temporarily down, or unreachable from your location.
+
+- Solution: The best way to fix this is to update your mirror list with faster and more reliable mirrors.
+
+```sh
+sudo cachyos-rate-mirrors
+# Afterwards, you can update your system with:
+sudo pacman -Syu
+```
+
+:::tip
+The `cachyos-rate-mirrors` command tests available CachyOS mirrors based on speed and synchronization status, then updates your mirror list file (`/etc/pacman.d/cachyos-mirrorlist`) with the best-performing ones.
+
+Consider running it periodically, especially if you notice slowdowns during system updates.
+:::
+
+#### warning: local is newer than...
+
+This warning appears when a package version on your system is newer than the version available in the official repositories. This can happen if a mirror is out of date or if a package was downgraded in the repositories or if a package was installed from a different source.
+
+- Solution: the `pacman -Syuu` command performs a full system upgrade and allows for downgrades, which will fix the warning by synchronizing your local packages with the repository versions.
+
+```sh title='To remove these warnings, execute the following command:'
+sudo pacman -Syuu
+```
+
+#### error: failed to commit transaction (conflicting files)
+
+This error indicates that pacman is trying to install or update a package that contains files already present on your system from a different source. This is a built-in safety feature to prevent system breakage.
+
+- Solution: You can resolve this issue by removing the conflicting files manually. For more information and solutions, please refer to the [Arch Wiki](https://wiki.archlinux.org/title/Pacman#%22Failed_to_commit_transaction_(conflicting_files)%22_error).
+
+```sh title='Example'
+error: failed to commit transaction (conflicting files)
+nvidia-utils: /usr/lib/environment.d/10-gsk.conf exists in filesystem
+Errors occurred, no packages were upgraded.
+ -> error installing repo packages
+```
+
+To fix this specific example, you would remove the conflicting file and then run your update command again.
+
+```sh
+sudo rm /usr/lib/environment.d/10-gsk.conf
+```
+
+#### ERROR: module not found: 'nvidia', 'nvidia_modeset', ...
+
+```sh title='Example'
+==> ERROR: module not found: 'nvidia'
+==> ERROR: module not found: 'nvidia_modeset'
+==> ERROR: module not found: 'nvidia_uvm'
+==> ERROR: module not found: 'nvidia_drm'
+```
+
+**Two reasons for this error:**
+
+1) Since Early Module Loading is always enabled in chwd, mkinitcpio consistently expects the presence of NVIDIA modules; this error arises when those modules are missing.
+
+2) You might be missing NVIDIA modules from other installed kernels on your system.
+
+```sh title='Install the following package to fix this error'
+sudo pacman -S nvidia
+```

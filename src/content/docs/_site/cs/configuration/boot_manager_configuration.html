@@ -1,0 +1,190 @@
+<h2 id="systemd-boot">systemd-boot</h2>
+
+<p>systemd-boot má dva druhy konfiguračních souborů, jeden pro samotný systemd-boot v <code class="language-plaintext highlighter-rouge">/boot/loader/loader.conf</code> a jeden pro každou
+jednotlivou položku kernelu v <code class="language-plaintext highlighter-rouge">/boot/loader/entry</code>.</p>
+
+<h3 id="konfigurace-zavaděče">Konfigurace zavaděče</h3>
+
+<p>V tomto konfiguračním souboru můžete změnit výchozí položku a časový limit systemd-boot.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /boot/loader/loader.conf</span>
+
+default @saved
+<span class="nb">timeout </span>5
+<span class="c">#console-mode keep # Tato volba nastavuje rozlišení konzole.</span>
+</code></pre></div></div>
+
+<h3 id="konfigurace-příkazového-řádku-kernelu">Konfigurace příkazového řádku kernelu</h3>
+
+<p>Pro snazší konfiguraci systemd-boot poskytujeme nástroj <a href="https://github.com/CachyOS/CachyOS-PKGBUILDS/tree/master/systemd-boot-manager"><code class="language-plaintext highlighter-rouge">sdboot-manage</code></a>.
+Jednou z výhod tohoto nástroje je globální konfigurace příkazového řádku kernelu. Konfigurační soubor pro <code class="language-plaintext highlighter-rouge">sdboot-manage</code> se nachází v <code class="language-plaintext highlighter-rouge">/etc/sdboot-manage.conf</code>.
+Upravte řádek <code class="language-plaintext highlighter-rouge">LINUX_OPTIONS=</code> v <code class="language-plaintext highlighter-rouge">/etc/sdboot-manage.conf</code> pro změnu parametrů kernelu.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /etc/sdboot-manage.conf</span>
+<span class="nv">LINUX_OPTIONS</span><span class="o">=</span><span class="s2">"zswap.enabled=0 nowatchdog quiet splash"</span>
+</code></pre></div></div>
+
+<p>Po provedení změn znovu vygenerujte všechny položky systemd-boot následujícím příkazem:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❯ <span class="nb">sudo </span>sdboot-manage gen
+</code></pre></div></div>
+
+<h2 id="refind">rEFInd</h2>
+
+<p>Stejně jako <a href="/configuration/boot_manager_configuration#systemd-boot">systemd-boot</a>, rEFInd má dva konfigurační soubory. <code class="language-plaintext highlighter-rouge">refind.conf</code> umístěný v
+<code class="language-plaintext highlighter-rouge">boot/efi/EFI/refind</code> slouží hlavně ke změně chování rEFInd, zatímco <code class="language-plaintext highlighter-rouge">/boot/refind_linux.conf</code> slouží ke správě vašich spouštěcích voleb.
+<code class="language-plaintext highlighter-rouge">refind.conf</code> obsahuje rozsáhlé komentáře vysvětlující všechny jeho volby.</p>
+
+<h3 id="konfigurace-příkazového-řádku-kernelu-1">Konfigurace příkazového řádku kernelu</h3>
+
+<p>Pro předání parametrů kernelu do příkazového řádku upravte “Boot using default options” v <code class="language-plaintext highlighter-rouge">/boot/refind_linux.conf</code>.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /boot/refind_linux.conf</span>
+
+<span class="s2">"Boot using default options"</span>     <span class="s2">"root=PARTUUID=1cb353ec-7f03-4820-8b4b-03baf53a208f rw zswap.enabled=0 nowatchdog quiet splash"</span>
+</code></pre></div></div>
+
+<p>Změny v obou konfiguračních souborech se projeví okamžitě. Spouštění příkazu k “uložení” změn není nutné.</p>
+
+<h2 id="grub">GRUB</h2>
+
+<p>Na rozdíl od <a href="/configuration/boot_manager_configuration#systemd-boot">systemd-boot</a> a <a href="/configuration/boot_manager_configuration#refind">rEFInd</a>,
+GRUB má pouze jeden konfigurační soubor umístěný v <code class="language-plaintext highlighter-rouge">/etc/default/grub</code>. V tomto souboru je poměrně dobrá dokumentace, která vysvětluje, co
+každá volba dělá.</p>
+
+<h3 id="skrytí-grub-menu">Skrytí GRUB menu</h3>
+
+<p>Pro skrytí GRUB menu jednoduše nastavte následující volby odpovídajícím způsobem.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /etc/default/grub</span>
+
+<span class="nv">GRUB_TIMEOUT</span><span class="o">=</span><span class="s1">'0'</span>
+<span class="nv">GRUB_TIMEOUT_STYLE</span><span class="o">=</span>hidden
+</code></pre></div></div>
+
+<p>Stiskněte ESC pro přístup k příkazovému řádku GRUB. Odtud spusťte <code class="language-plaintext highlighter-rouge">normal</code> nebo <code class="language-plaintext highlighter-rouge">exit</code> pro návrat do známého spouštěcího menu GRUB.</p>
+
+<h3 id="konfigurace-příkazového-řádku-kernelu-2">Konfigurace příkazového řádku kernelu</h3>
+
+<p>Pro předání parametrů kernelu do příkazového řádku s GRUBem musíme upravit <code class="language-plaintext highlighter-rouge">GRUB_CMDLINE_LINUX_DEFAULT</code> v <code class="language-plaintext highlighter-rouge">/etc/default/grub</code>.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /etc/default/grub</span>
+
+<span class="nv">GRUB_CMDLINE_LINUX_DEFAULT</span><span class="o">=</span><span class="s1">'nowatchdog zswap.enabled=0 quiet splash'</span>
+</code></pre></div></div>
+
+<p>Pokaždé, když upravíme konfigurační soubor GRUB, musíme znovu vytvořit konfiguraci následujícím příkazem:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❯ <span class="nb">sudo </span>grub-mkconfig <span class="nt">-o</span> /boot/grub/grub.cfg
+</code></pre></div></div>
+
+<h2 id="limine">Limine</h2>
+<p>Limine je moderní zavaděč známý svou jednoduchou konfigurací. Tento průvodce pokrývá základy, které vám pomohou začít.</p>
+
+<p>Konfigurace probíhá primárně v <code class="language-plaintext highlighter-rouge">/boot/limine.conf</code> (nebo někdy v EFI system partition) pro nastavení menu a v <code class="language-plaintext highlighter-rouge">/etc/default/limine</code> pro parametry kernelu.</p>
+
+<h3 id="konfigurace-spouštěcího-menu">Konfigurace spouštěcího menu</h3>
+
+<p>Tento soubor řídí chování a vzhled spouštěcího menu. Změny zde provedené se projeví ihned po uložení – nejsou potřeba žádné další příkazy.</p>
+
+<ul>
+  <li><strong>Časový limit:</strong> Nastavuje, kolik sekund Limine počká, než automaticky spustí výchozí položku.
+  ```shell
+  # /boot/limine.conf</li>
+</ul>
+
+<p>timeout: 5</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>*   **Výchozí položka:** Určuje, která položka menu se spustí jako výchozí. Položky jsou číslovány od 1. Pokud není nastaveno, výchozí hodnota je 1.
+  ```shell
+  # /boot/limine.conf
+
+  default_entry: 2 # Spustit druhou položku jako výchozí
+</code></pre></div></div>
+<p>:::tip
+   Pokud <code class="language-plaintext highlighter-rouge">default_entry</code> odkazuje na adresář (např. <code class="language-plaintext highlighter-rouge">/+CachyOS</code>), automatické spuštění bude zakázáno. Pro automatické spuštění položky uvnitř adresáře musí <code class="language-plaintext highlighter-rouge">default_entry</code> odkazovat přímo na konkrétní číslo této položky.
+  :::</p>
+
+<p><strong>Příklad (<code class="language-plaintext highlighter-rouge">/boot/limine.conf</code>):</strong></p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /boot/limine.conf</span>
+
+<span class="nb">timeout</span>: 5
+default_entry: 2 <span class="c"># Odkazuje přímo na položku 'linux-cachyos' níže</span>
+
+/+CachyOS        <span class="c"># Položka 1: Adresář (použijte /+ pro výchozí rozbalení)</span>
+//linux-cachyos  <span class="c"># Položka 2: Skutečná spouštěcí položka</span>
+    protocol: linux
+    kernel_path: boot<span class="o">()</span>:/vmlinuz-linux-cachyos
+    cmdline: quiet splash <span class="nv">root</span><span class="o">=</span><span class="nv">UUID</span><span class="o">=</span>... rw <span class="c"># Základní parametry kernelu</span>
+    module_path: boot<span class="o">()</span>:/initramfs-linux-cachyos.img
+</code></pre></div></div>
+
+<p>:::note
+<code class="language-plaintext highlighter-rouge">boot():/</code> odkazuje na kořenový adresář spouštěcího disku.
+:::</p>
+
+<h3 id="vzhled-theming">Vzhled (Theming)</h3>
+
+<p>Můžete si přizpůsobit vizuální vzhled spouštěcího menu Limine:</p>
+
+<ul>
+  <li><strong>Tapeta:</strong> Nastavte obrázek na pozadí. Podporované formáty zahrnují BMP, PNG a JPEG.
+  ```shell
+  # /boot/limine.conf</li>
+</ul>
+
+<p>wallpaper: boot():/splash.png
+  wallpaper_style: stretched # Možnosti: ‘stretched’, ‘tiled’, ‘centered’
+  backdrop: 000000           # Barva pozadí (RRGGBB hex) pokud je styl ‘centered’</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>*   **Písma:** Použijte [vlastní soubor písma](https://github.com/viler-int10h/vga-text-mode-fonts) a upravte jeho velikost.
+  ```shell
+  # /boot/limine.conf
+
+  term_font: boot():/custom_font.F16
+  term_font_scale: 2x2 # Mění velikost písma, užitečné pro displeje s vysokým rozlišením
+</code></pre></div></div>
+<ul>
+  <li><strong>Barvy:</strong> Upravte barvy textu a pozadí terminálu.
+  ```shell
+  # /boot/limine.conf</li>
+</ul>
+
+<p>term_background: 80000000 # Příklad: Poloprůhledná černá (AARRGGBB)
+  # Jsou k dispozici další volby barev jako term_foreground, atd.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+### Konfigurace příkazového řádku kernelu
+
+V CachyOS jsou položky kernelu v menu zavaděče Limine **spravovány automaticky**. Když instalujete nebo odstraňujete kernely, `limine-mkinitcpio-hook` používá na pozadí nástroj `limine-entry-tool` k aktualizaci spouštěcích položek.
+
+Ačkoli jsou položky spravovány automaticky, můžete **konfigurovat parametry kernelu** (také známé jako příkazový řádek kernelu), které se předávají kernelu při spouštění.
+
+1.  **Upravte konfigurační soubor:** Upravte proměnné `KERNEL_CMDLINE` v `/etc/default/limine`. Můžete nastavit výchozí parametry pro všechny kernely nebo specifické parametry pro určité názvy kernelů (např. `linux-cachyos`).
+   ```shell
+   # /etc/default/limine
+
+   # Výchozí parametry pro většinu kernelů
+   KERNEL_CMDLINE[default]="quiet splash rd.udev.log_priority=3"
+
+   # Specifické parametry pro kernel 'linux-cachyos'
+   KERNEL_CMDLINE["linux-cachyos"]="quiet splash mitigations=off"
+
+   # Parametry pro záložní položky (pokud jsou generovány)
+   # KERNEL_CMDLINE[fallback]="..."
+</code></pre></div></div>
+<ol>
+  <li><strong>Aplikujte změny:</strong> Po uložení <code class="language-plaintext highlighter-rouge">/etc/default/limine</code> musíte znovu vygenerovat vaše initramfs obrazy a aktualizovat položky Limine, aby se nové parametry kernelu projevily. Spusťte následující příkaz:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   <span class="nb">sudo </span>limine-mkinitcpio
+</code></pre></div>    </div>
+    <p>Tento příkaz spustí proces <code class="language-plaintext highlighter-rouge">mkinitcpio</code>, který zahrnuje <code class="language-plaintext highlighter-rouge">limine-mkinitcpio-hook</code>, což zajistí, že vaše změny v <code class="language-plaintext highlighter-rouge">/etc/default/limine</code> budou začleněny do spouštěcích položek v <code class="language-plaintext highlighter-rouge">/boot/limine.conf</code>.</p>
+  </li>
+</ol>
+
+<h2 id="další-informace">Další informace</h2>
+
+<ul>
+  <li><a href="https://man.archlinux.org/man/loader.conf.5">Manuálová stránka loader.conf</a></li>
+  <li><a href="https://www.rodsbooks.com/refind/configfile.html">rEFInd: Konfigurace zavaděče</a></li>
+  <li><a href="https://www.gnu.org/software/grub/manual/grub/grub.html#Configuration">Manuál GRUB: Konfigurace</a></li>
+  <li><a href="https://github.com/limine-bootloader/limine/blob/v9.x/CONFIG.md">Oficiální dokumentace konfigurace Limine</a></li>
+  <li><a href="https://gitlab.com/Zesko/limine-entry-tool">Projekt limine-entry-tool</a></li>
+</ul>

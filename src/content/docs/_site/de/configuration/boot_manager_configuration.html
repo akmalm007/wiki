@@ -1,0 +1,209 @@
+<h2 id="systemd-boot">systemd-boot</h2>
+
+<p>systemd-boot hat zwei Arten von Konfigurationsdateien: eine für systemd-boot selbst in <code class="language-plaintext highlighter-rouge">/boot/loader/loader.conf</code> und eine für jeden
+einzelnen Kernel-Eintrag in <code class="language-plaintext highlighter-rouge">/boot/loader/entry</code>.</p>
+
+<h3 id="loader-konfiguration">Loader-Konfiguration</h3>
+
+<p>In dieser Konfigurationsdatei kannst du den Standardeintrag und das Zeitlimit von systemd-boot ändern.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /boot/loader/loader.conf</span>
+
+default @saved
+<span class="nb">timeout </span>5
+<span class="c">#console-mode keep # Diese Option konfiguriert die Auflösung der Konsole.</span>
+</code></pre></div></div>
+
+<h3 id="kernel-kommandozeilen-konfiguration">Kernel-Kommandozeilen-Konfiguration</h3>
+
+<p>Wir stellen ein Werkzeug zur einfacheren Konfiguration von systemd-boot zur Verfügung: <a href="https://github.com/CachyOS/CachyOS-PKGBUILDS/tree/master/systemd-boot-manager"><code class="language-plaintext highlighter-rouge">sdboot-manage</code></a>.
+Einer der Vorteile dieses Werkzeugs ist die globale Konfiguration der Kernel-Kommandozeile. Die Konfigurationsdatei für <code class="language-plaintext highlighter-rouge">sdboot-manage</code> befindet sich in <code class="language-plaintext highlighter-rouge">/etc/sdboot-manage.conf</code>.</p>
+
+<p>Bearbeite die Zeile <code class="language-plaintext highlighter-rouge">LINUX_OPTIONS=</code> in <code class="language-plaintext highlighter-rouge">/etc/sdboot-manage.conf</code>, um die Kernel-Parameter zu ändern.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /etc/sdboot-manage.conf</span>
+<span class="nv">LINUX_OPTIONS</span><span class="o">=</span><span class="s2">"zswap.enabled=0 nowatchdog quiet splash"</span>
+</code></pre></div></div>
+
+<p>Nachdem du Änderungen vorgenommen hast, generiere alle systemd-boot-Einträge mit dem folgenden Befehl neu:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>sdboot-manage gen
+</code></pre></div></div>
+
+<h2 id="refind">rEFInd</h2>
+
+<p>Wie <a href="/de/configuration/boot_manager_configuration#systemd-boot">systemd-boot</a> hat rEFInd zwei Konfigurationsdateien. <code class="language-plaintext highlighter-rouge">refind.conf</code> in
+<code class="language-plaintext highlighter-rouge">boot/efi/EFI/refind</code> dient hauptsächlich dazu, das Verhalten von rEFInd zu ändern, während <code class="language-plaintext highlighter-rouge">/boot/refind_linux.conf</code> zur Verwaltung deiner Boot-Optionen dient.
+<code class="language-plaintext highlighter-rouge">refind.conf</code> enthält ausführliche Kommentare, die alle Optionen erklären.</p>
+
+<h3 id="kernel-kommandozeilen-konfiguration-1">Kernel-Kommandozeilen-Konfiguration</h3>
+
+<p>Um Kernel-Parameter an die Kommandozeile zu übergeben, ändere “Boot using default options” in <code class="language-plaintext highlighter-rouge">/boot/refind_linux.conf</code>.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /boot/refind_linux.conf</span>
+
+<span class="s2">"Boot using default options"</span>     <span class="s2">"root=PARTUUID=1cb353ec-7f03-4820-8b4b-03baf53a208f rw zswap.enabled=0 nowatchdog quiet splash"</span>
+</code></pre></div></div>
+
+<p>Änderungen an beiden Konfigurationsdateien werden sofort wirksam. Es ist nicht notwendig, einen Befehl zum “Speichern” der Änderungen auszuführen.</p>
+
+<h2 id="grub">GRUB</h2>
+
+<p>Im Gegensatz zu <a href="/de/configuration/boot_manager_configuration#systemd-boot">systemd-boot</a> und <a href="/de/configuration/boot_manager_configuration#refind">rEFInd</a>
+hat GRUB nur eine Konfigurationsdatei, die sich in <code class="language-plaintext highlighter-rouge">/etc/default/grub</code> befindet. In dieser Datei gibt es eine ziemlich gute Dokumentation, die erklärt, was
+jede Option bewirkt.</p>
+
+<h3 id="das-grub-bootmenü-ausblenden">Das GRUB-Bootmenü ausblenden</h3>
+
+<p>Um das GRUB-Menü auszublenden, setze einfach die folgenden Optionen entsprechend.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /etc/default/grub</span>
+
+<span class="nv">GRUB_TIMEOUT</span><span class="o">=</span><span class="s1">'0'</span>
+<span class="nv">GRUB_TIMEOUT_STYLE</span><span class="o">=</span>hidden
+</code></pre></div></div>
+
+<p>Drück ESC, um zur GRUB-Eingabeaufforderung zu gelangen. Führe von hier aus <code class="language-plaintext highlighter-rouge">normal</code> oder <code class="language-plaintext highlighter-rouge">exit</code> aus, um zum gewohnten GRUB-Bootmenü zurückzukehren.</p>
+
+<h3 id="kernel-kommandozeilen-konfiguration-2">Kernel-Kommandozeilen-Konfiguration</h3>
+
+<p>Um Kernel-Parameter mit GRUB an die Kommandozeile zu übergeben, müssen wir <code class="language-plaintext highlighter-rouge">GRUB_CMDLINE_LINUX_DEFAULT</code> in <code class="language-plaintext highlighter-rouge">/etc/default/grub</code> bearbeiten.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /etc/default/grub</span>
+
+<span class="nv">GRUB_CMDLINE_LINUX_DEFAULT</span><span class="o">=</span><span class="s1">'nowatchdog zswap.enabled=0 quiet splash'</span>
+</code></pre></div></div>
+
+<p>Jedes Mal, wenn wir die GRUB-Konfigurationsdatei ändern, müssen wir die Konfiguration mit dem folgenden Befehl neu erstellen:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>grub-mkconfig <span class="nt">-o</span> /boot/grub/grub.cfg
+</code></pre></div></div>
+
+<h2 id="limine">Limine</h2>
+
+<p>Limine ist ein moderner Bootloader, der für seine einfache Konfiguration bekannt ist. Diese Anleitung behandelt die Grundlagen, um dir den Einstieg zu erleichtern.</p>
+
+<p>Die Konfiguration findet hauptsächlich in <code class="language-plaintext highlighter-rouge">/boot/limine.conf</code> (oder manchmal in der EFI-Systempartition) für Menüeinstellungen und in <code class="language-plaintext highlighter-rouge">/etc/default/limine</code> für Kernel-Parameter statt.</p>
+
+<h3 id="bootmenü-konfiguration">Bootmenü-Konfiguration</h3>
+
+<p>Diese Datei steuert das Verhalten und das Aussehen des Bootmenüs. Änderungen, die hier vorgenommen werden, treten sofort nach dem Speichern in Kraft – es sind keine zusätzlichen Befehle erforderlich.</p>
+
+<ul>
+  <li>
+    <p><strong>Timeout:</strong> Legt fest, wie viele Sekunden Limine wartet, bevor der Standardeintrag automatisch gebootet wird.</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /boot/limine.conf</span>
+
+<span class="nb">timeout</span>: 5
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Standardeintrag:</strong> Gibt an, welcher Menüeintrag standardmäßig gebootet wird. Die Einträge sind ab 1 nummeriert. Wenn nicht festgelegt, ist der Standardwert 1.</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /boot/limine.conf</span>
+
+default_entry: 2 <span class="c"># Bootet standardmäßig den zweiten Eintrag</span>
+</code></pre></div>    </div>
+
+    <p>:::tip
+ Wenn <code class="language-plaintext highlighter-rouge">default_entry</code> auf ein Verzeichnis zeigt (z. B. <code class="language-plaintext highlighter-rouge">/+CachyOS</code>), wird der automatische Start deaktiviert. Um einen Eintrag innerhalb eines Verzeichnisses automatisch zu starten, muss <code class="language-plaintext highlighter-rouge">default_entry</code> direkt auf die spezifische Eintragsnummer verweisen.
+:::</p>
+  </li>
+</ul>
+
+<p>Beispiel (<code class="language-plaintext highlighter-rouge">/boot/limine.conf</code>):</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /boot/limine.conf</span>
+
+<span class="nb">timeout</span>: 5
+default_entry: 2 <span class="c"># Verweist direkt auf den unten stehenden 'linux-cachyos'-Eintrag</span>
+
+/+CachyOS        <span class="c"># Eintrag 1: Ein Verzeichnis (verwende /+, um es standardmäßig zu erweitern)</span>
+//linux-cachyos  <span class="c"># Eintrag 2: Der tatsächlich bootfähige Eintrag</span>
+    protocol: linux
+    kernel_path: boot<span class="o">()</span>:/vmlinuz-linux-cachyos
+    cmdline: quiet splash <span class="nv">root</span><span class="o">=</span><span class="nv">UUID</span><span class="o">=</span>... rw <span class="c"># Grundlegende Kernel-Parameter</span>
+    module_path: boot<span class="o">()</span>:/initramfs-linux-cachyos.img
+</code></pre></div></div>
+
+<p>:::note
+<code class="language-plaintext highlighter-rouge">boot():/</code> bezieht sich auf das Stammverzeichnis des Boot-Laufwerks.
+:::</p>
+
+<h3 id="theming">Theming</h3>
+
+<p>Du kannst das visuelle Erscheinungsbild des Limine-Bootmenüs anpassen:</p>
+
+<ul>
+  <li>
+    <p><strong>Hintergrundbild:</strong> Lege ein Hintergrundbild fest. Unterstützte Formate sind BMP, PNG und JPEG.</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /boot/limine.conf</span>
+
+wallpaper: boot<span class="o">()</span>:/splash.png
+wallpaper_style: stretched <span class="c"># Optionen: 'stretched', 'tiled', 'centered'</span>
+backdrop: 000000           <span class="c"># Hintergrundfarbe (RRGGBB hex), wenn der Stil 'centered' ist</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Schriftarten:</strong> Verwende eine <a href="https://github.com/viler-int10h/vga-text-mode-fonts">benutzerdefinierte Schriftartdatei</a> und passe deren Größe an.</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /boot/limine.conf</span>
+
+term_font: boot<span class="o">()</span>:/custom_font.F16
+term_font_scale: 2x2 <span class="c"># Skaliert die Schriftgröße, nützlich für hochauflösende Displays</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Farben:</strong> Ändere die Text- und Hintergrundfarben des Terminals.</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /boot/limine.conf</span>
+
+term_background: 80000000 <span class="c"># Beispiel: Halbtransparentes Schwarz (AARRGGBB)</span>
+<span class="c"># Andere Farboptionen wie term_foreground, etc., sind verfügbar.</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="kernel-kommandozeilen-konfiguration-3">Kernel-Kommandozeilen-Konfiguration</h3>
+
+<p>Auf CachyOS werden Kernel-Einträge im Limine-Bootmenü <strong>automatisch verwaltet</strong>. Wenn du Kernel installierst oder entfernst, verwendet der <code class="language-plaintext highlighter-rouge">limine-mkinitcpio-hook</code> das <code class="language-plaintext highlighter-rouge">limine-entry-tool</code>-Dienstprogramm im Hintergrund, um die Boot-Einträge zu aktualisieren.</p>
+
+<p>Obwohl die Einträge automatisch gehandhabt werden, kannst du die <strong>Kernel-Parameter</strong> (auch als Kernel-Kommandozeile bekannt) konfigurieren, die beim Booten an den Kernel übergeben werden.</p>
+
+<ol>
+  <li>
+    <p><strong>Konfigurationsdatei bearbeiten:</strong> Ändere die <code class="language-plaintext highlighter-rouge">KERNEL_CMDLINE</code>-Variablen in <code class="language-plaintext highlighter-rouge">/etc/default/limine</code>. Du kannst Standardparameter für alle Kernel oder spezifische Parameter für bestimmte Kernel-Namen (z. B. <code class="language-plaintext highlighter-rouge">linux-cachyos</code>) festlegen.</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /etc/default/limine</span>
+
+<span class="c"># Standardparameter für die meisten Kernel</span>
+KERNEL_CMDLINE[default]<span class="o">=</span><span class="s2">"quiet splash rd.udev.log_priority=3"</span>
+
+<span class="c"># Spezifische Parameter für den 'linux-cachyos'-Kernel</span>
+KERNEL_CMDLINE[<span class="s2">"linux-cachyos"</span><span class="o">]=</span><span class="s2">"quiet splash mitigations=off"</span>
+
+<span class="c"># Parameter für Fallback-Einträge (falls generiert)</span>
+<span class="c"># KERNEL_CMDLINE[fallback]="..."</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Änderungen anwenden:</strong> Nach dem Speichern von <code class="language-plaintext highlighter-rouge">/etc/default/limine</code> musst du deine initramfs-Images neu generieren und die Limine-Einträge aktualisieren, um die neuen Kernel-Parameter anzuwenden. Führe den folgenden Befehl aus:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>limine-mkinitcpio
+</code></pre></div>    </div>
+
+    <p>Dieser Befehl löst den <code class="language-plaintext highlighter-rouge">mkinitcpio</code>-Prozess aus, der den <code class="language-plaintext highlighter-rouge">limine-mkinitcpio-hook</code> enthält. Dadurch wird sichergestellt, dass deine Änderungen in <code class="language-plaintext highlighter-rouge">/etc/default/limine</code> in die Boot-Einträge unter <code class="language-plaintext highlighter-rouge">/boot/limine.conf</code> übernommen werden.</p>
+  </li>
+</ol>
+
+<h2 id="erfahre-mehr">Erfahre mehr</h2>
+
+<ul>
+  <li><a href="https://man.archlinux.org/man/loader.conf.5">Manpage von loader.conf</a></li>
+  <li><a href="https://www.rodsbooks.com/refind/configfile.html">rEFInd: Konfigurieren des Bootmanagers</a></li>
+  <li><a href="https://www.gnu.org/software/grub/manual/grub/grub.html#Configuration">GRUB-Handbuch: Konfiguration</a></li>
+  <li><a href="https://github.com/limine-bootloader/limine/blob/v9.x/CONFIG.md">Offizielle Limine-Konfigurationsdokumentation</a></li>
+  <li><a href="https://gitlab.com/Zesko/limine-entry-tool">limine-entry-tool Projekt</a></li>
+</ul>

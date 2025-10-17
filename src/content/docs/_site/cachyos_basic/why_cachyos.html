@@ -1,0 +1,68 @@
+<p>CachyOS is a performance-centric Arch Linux distribution designed to deliver a stable, efficient, and user-friendly computing environment. It offers the full power and flexibility of a rolling-release system, enhanced by advanced optimizations and a custom toolchain that streamlines the user experience for both new and experienced users.</p>
+
+<h2 id="performance-and-optimization">Performance and Optimization</h2>
+
+<h3 id="optimized-packages-and-repositories">Optimized Packages and Repositories</h3>
+
+<p>CachyOS provides a large selection of <strong><a href="https://packages.cachyos.org/">optimized packages</a></strong> specifically compiled for various modern CPU architectures. This includes support for <code class="language-plaintext highlighter-rouge">x86-64-v3</code>, <code class="language-plaintext highlighter-rouge">x86-64-v4</code>, and <code class="language-plaintext highlighter-rouge">Zen4+</code> systems, ensuring your software is built to take full advantage of your hardware’s capabilities for a significant performance boost.</p>
+
+<p>For a more in depth look of our optimized repositories, see our detailed guide on <strong><a href="/features/optimized_repos">Optimized Repositories</a></strong>.</p>
+
+<h3 id="custom-kernel-tuned-for-performance-and-stability">Custom Kernel Tuned for Performance and Stability</h3>
+
+<p>Aside from the CachyOS base kernel patch set that tunes various kernel parameters to improve desktop responsiveness, CachyOS cherry-picks patch sets that have not been mainlined or are not included in the stable revision of the kernel.</p>
+
+<p>Therefore, these patches undergo internal testing before being released to users to ensure that stability isn’t impacted. For a complete list of the patches that CachyOS provides, see <a href="/features/kernel">Kernel</a>.</p>
+
+<h3 id="advanced-cpu-scheduler-support">Advanced CPU Scheduler Support</h3>
+
+<p>CachyOS ships kernels with the latest CPU scheduler optimizations to ensure a smooth and interactive desktop, even under heavy load.</p>
+
+<ul>
+  <li>
+    <p><strong>EEVDF (The default Linux kernel scheduler):</strong> While excellent for general throughput, the CachyOS kernel includes custom <strong><a href="https://github.com/CachyOS/linux/blob/6.15/cachy/kernel/sched/fair.c#L79-81">EEVDF tunables</a></strong> to improve desktop responsiveness.</p>
+  </li>
+  <li>
+    <p><strong><a href="https://github.com/firelzrd/bore-scheduler">BORE</a> (Burst-Oriented Response Enhancer):</strong> For users who need maximum interactivity, our kernels support the BORE scheduler, a patch set that enhances EEVDF to deliver a more fluid experience during intensive workloads.</p>
+  </li>
+</ul>
+
+<p>For more information about the kernels offered by CachyOS and the sched-ext framework, see the <strong><a href="/features/kernel">Kernel</a></strong> and <strong><a href="/configuration/sched-ext">sched-ext</a></strong> documentation.</p>
+
+<h2 id="user-friendly-tools-and-customization">User-Friendly Tools and Customization</h2>
+
+<h3 id="automated-hardware-detection"><a href="/features/chwd">Automated Hardware Detection</a></h3>
+
+<p>CachyOS includes a custom hardware detection tool that automatically identifies and installs the necessary drivers and packages for your system. This eliminates the need for manual driver searching, saving you time and effort after installation.</p>
+
+<h3 id="customizable-installation-process">Customizable Installation Process</h3>
+
+<p>The CachyOS installer lets users customize their system by choosing the desktop environment, packages, filesystem, boot manager, kernel, and more to fit their needs:</p>
+
+<ul>
+  <li><a href="/installation/desktop_environments/">Desktop Environments</a></li>
+  <li><a href="/installation/boot_managers/">Boot Managers</a></li>
+  <li><a href="/features/kernel#variants">Kernel Flavors</a></li>
+  <li><a href="/installation/filesystem">Filesystems</a></li>
+  <li><a href="https://github.com/CachyOS/cachyos-calamares/blob/cachyos-limine-qt6/src/modules/netinstall/netinstall.yaml">Custom Packages to include during installation</a></li>
+</ul>
+
+<h3 id="cachyos-custom-applications">CachyOS Custom Applications</h3>
+
+<p>CachyOS develops and maintains its own suite of applications to simplify system management and enhance your experience.</p>
+
+<p>List of applications that CachyOS currently develops and maintains:</p>
+
+<ul>
+  <li><strong><a href="https://github.com/CachyOS/CachyOS-Welcome">CachyOS Hello</a>:</strong> A welcome application for controlling tweaks, applying fixes, and installing packages.</li>
+  <li><strong><a href="https://github.com/CachyOS/packageinstaller">CachyOS Package Installer</a>:</strong> A graphical user interface (GUI) for easy installation of applications.</li>
+  <li><strong><a href="https://github.com/CachyOS/kernel-manager">CachyOS Kernel Manager</a>:</strong> Easily install kernels from the repository, configure your own, and manage the <code class="language-plaintext highlighter-rouge">sched-ext</code> framework.</li>
+  <li><strong><a href="https://github.com/CachyOS/rate-mirrors">cachyos-rate-mirrors</a>:</strong> Automatically ranks Arch and CachyOS mirrors for optimal download speeds with <code class="language-plaintext highlighter-rouge">pacman</code>.</li>
+  <li><strong><a href="https://github.com/CachyOS/systemd-boot-manager">systemd-boot-manager</a>:</strong> Automatically generates new boot entries for <code class="language-plaintext highlighter-rouge">systemd-boot</code>, which can be easily configured via <code class="language-plaintext highlighter-rouge">/etc/sdboot-manage.conf</code>.</li>
+</ul>
+
+<h2 id="a-friendly-and-active-community">A Friendly and Active Community</h2>
+
+<p>The greatest strength of CachyOS is its expanding community. Community members help one another by sharing tips, providing support, and contributing to the project’s success. Your feedback helps us to continuously improve the CachyOS experience.</p>
+
+<p>Join us and become a part of the community on the <strong><a href="https://discord.com/invite/cachyos-862292009423470592">CachyOS Discord</a></strong> and the <strong><a href="https://discuss.cachyos.org/">CachyOS Forum</a></strong>.</p>

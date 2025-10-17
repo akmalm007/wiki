@@ -1,0 +1,125 @@
+import ImageComponent from '~/components/image-component.astro';
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+:::note
+Pertanyaan dan jawaban berikut ini berlaku untuk CachyOS and distribusi berbasis Arch. `Ini tidak dimaksudkan untuk menggantikan informasi yang ada di Wiki Arch Linux`
+:::
+
+## Instalasi & Lingkungan *Live*
+
+### Why does the CachyOS live ISO only include KDE Plasma?
+
+Kami memutuskan untuk fokus sepenuhnya pada pengembangan dan pemeliharaan secara khusus kepada KDE Plasma *desktop environment*. Hal ini membuat kami bisa menyediakan pengalaman pengguna yang lebih lancar, stabil, dan konsisten pada live ISO milik kami.
+
+Lingkungan *Live* ditunjukkan untuk instalasi CachyOS atau menggunakan cachy-chroot untuk pemulihan sistem. Untuk cara yang aman dalam menguji *desktop environments* yang lain atau *window managers*, kami sangat merekomendasikan untuk mencobanya di dalam virtual machine (VM).
+
+### Kenapa *installer* membutuhkan waktu lama untuk memulai setelah tekan "Launch Installer"?
+
+:::caution
+Pastikan anda memiliki koneksi internet yang aktif/berjalan, jika tidak, tidak terjadi apa apa ketika anda menekan tombol ini.
+:::
+
+*Installer*-nya tidak macet. Namun sedang menjalankan skrip di belakang layar untuk mempersiapkan instalasi. Proses ini memastikan sistem *keyring* dan jam anda adalah yang terbaru, yang membantu untuk mencegah isu yang biasa terjadi ketika instalasi. 
+
+[Lihat skrip di dalam GitHub](https://github.com/CachyOS/CachyOS-Live-ISO/blob/master/archiso/airootfs/usr/local/bin/calamares-online.sh) untuk mendapatkan pemahaman lebih tentang apa yang dilakukan.
+<Steps>
+  1. Hapus file *keyring* yang lama.
+  2. Instal dan perbarui paket *keyring* dari Arch & CachyOS yang terbaru.
+  3. Inisialisasi dan isi *keyring* dari pacman.
+  4. Mengaktifkan sinkronisasi waktu jaringan.
+  5. Memeriksa jenis boot dari sistem anda (UEFI atau BIOS/MBR) untuk meminta pengguna memilih *bootloader* sesuai dengan jenisnya.
+</Steps>
+
+Inilah kenapa memerlukan waktu yang sedikit lebih lama untuk memulai *installer*.
+
+### Mengapa instalasi saya berhenti pada 33%
+
+Hal itu terjadi ketika *installer* kesulitan dalam mengunduh paket. Biasanya adalah tanda dari koneksi internet yang lambat atau tidak stabil. Silahkan untuk periksa kembali jaringan koneksi anda dan coba lagi.
+
+## Bootloader Pemulihan
+
+:::note[Jika partisi /boot terhapus. Silahkan membuat partisi yang baru mengikuti skema partisi yang sesuai [skema partisi](/installation/installation_on_root#uefigpt) dari langkah 5.]
+:::
+
+### Langkah untuk pemulihan bootlader
+
+<Steps>
+    1. Boot kedalam CachyOS Live ISO.
+    2. Buka terminal dan chroot kedalam instalasi sistem menggunakan perintah `cachy-chroot`.
+
+        ```bash
+        sudo cachy-chroot
+        ```
+        Jika sistem anda menggunakan BTRFS dengan pengaturan bawaan kami, masukan `y` pada prompt:
+         ```bash title='Contoh'
+         Do you want to use CachyOS BTRFS preset to auto mount root subvolume? y
+         Do you want to mount additional partitions? · yes
+         Enter the mount point for additional partition (e.g. /boot) type 'skip' to cancel:
+         # Ketik /boot untuk systemd-boot, Limine atau rEFInd
+         # Ketik /boot/efi untuk GRUB
+         ```
+    3. Ikuti petunjuk di bawah untuk bootlader yang terpasang dan jenis sistem anda (UEFI or MBR/BIOS).
+        <Tabs>
+            <TabItem label='GRUB'>
+                Install ulang GRUB mengikuti perintah berikut:
+                <Tabs>
+                    <TabItem label='UEFI'>
+                        ```bash
+                        sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=cachyos
+                        ```
+                    </TabItem>
+                    <TabItem label='MBR/BIOS'>
+                        ```bash
+                        sudo grub-install --target=i386-pc /dev/sdX # Ganti sdX dengan disk anda, contoh sda
+                        ```
+                    </TabItem>
+                </Tabs>
+            </TabItem>
+            <TabItem label='systemd-boot (untuk UEFI)'>
+                Install ulang systemd-boot mengikuti perintah berikut:
+                ```bash
+                sudo bootctl install
+                ```
+            </TabItem>
+            <TabItem label='Limine'>
+                Install ulang Limine mengikuti perintah berikut:
+                <Tabs>
+                    <TabItem label='UEFI'>
+                        ```bash
+                        sudo limine-install
+                        ```
+                    </TabItem>
+                    <TabItem label='MBR/BIOS'>
+                        ```bash
+                        sudo limine bios-install /dev/sdX # Ganti sdX dengan disk anda, contoh sda
+                        ```
+                    </TabItem>
+                </Tabs>
+            </TabItem>
+            <TabItem label='rEFInd (untuk UEFI)'>
+                Install ulang rEFInd mengikuti perintah berikut:
+                ```bash
+                sudo refind-install
+                ```
+            </TabItem>
+        </Tabs>
+    4. Install kembali CachyOS kernel:
+        ```bash
+        sudo pacman -Syu linux-cachyos linux-cachyos-headers
+        ```
+    5. Keluar dar cachy-chroot:
+        ```bash
+        exit
+        ```
+    6. Mulai ulang sistem anda.
+</Steps>
+
+## Pengelolaan Paket & Pembaruan
+
+### Pacman Pemecehanan Masalah
+
+#### error: signature is invalid
+
+*Error* ini menandakan masalah dengan kriptografis *signature* dari paket. Hal ini disebabkan oleh *mirror* yang sudah usang atau *keyring* yang rusak di dalam sistem anda.
+
+While mirrors often fix themselves after a short while, if the issue persists, you should try one of the following two solutions.

@@ -1,0 +1,173 @@
+<p>Kernel CachyOS je upravený kernel, který využívá vylepšení, konfigurace a patche z upstreamu.</p>
+
+<h2 id="vlastnosti">Vlastnosti</h2>
+
+<ul>
+  <li>Možnost volby mezi 3 plánovači kernelu a různými <a href="/configuration/sched-ext">sched-ext</a> plánovači pro zlepšení odezvy</li>
+  <li>Vylepšení AMD P-State</li>
+  <li>Nejnovější BBRv3 od Googlu</li>
+  <li>le9uo pro výrazně zlepšenou odezvu při vysokém zatížení paměti</li>
+  <li>Aktuální sada patchů NTSYNC, používaná s kompatibilním sestavením wine/protonu</li>
+  <li>Kompatibilita se zařízeními T2 MacOS s patchy z <a href="https://github.com/t2linux/linux-t2-patches/">t2linux</a></li>
+  <li>Umožňuje čtení spotřeby energie CPU pro jednotlivá jádra pro uživatele AMD</li>
+  <li>ACS Override a v412loopback</li>
+  <li>Modul VHBA pro emulaci zařízení CD/DVD-ROM</li>
+  <li>Nejnovější sada patchů ZSTD</li>
+  <li>Různé další patche, které se zaměřují na zlepšení výkonu (optimalizované příznaky kompilátoru, kryptografická vylepšení, úpravy správy paměti)</li>
+</ul>
+
+<p>Pro podrobnější seznam patchů, které CachyOS nabízí, se prosím podívejte na kompletnější
+<a href="https://github.com/CachyOS/linux-cachyos/?tab=readme-ov-file#features">seznam vlastností</a>, <a href="https://github.com/CachyOS/kernel-patches">repozitář kernel-patches</a>
+a <a href="https://github.com/CachyOS/linux">strom zdrojového kódu Linuxu CachyOS</a>.</p>
+
+<h2 id="varianty">Varianty</h2>
+
+<p>CachyOS nabízí širokou škálu možností kernelu. Všechny kernely, které poskytujeme, jsou dodávány se <a href="https://github.com/CachyOS/kernel-patches">základní sadou patchů CachyOS</a>.
+Pro každý z kernelů existuje <a href="#package-naming-convention">odpovídající varianta <code class="language-plaintext highlighter-rouge">-lto</code></a>, která
+je sestavena s <a href="https://clang.llvm.org/">clang</a> namísto <a href="https://gcc.gnu.org/">GCC</a>.</p>
+
+<ul>
+  <li><strong>linux-cachyos</strong>
+    <ul>
+      <li>Tickrate 1000Hz pro zlepšenou odezvu.</li>
+      <li>Výchozí kernel. Toto je doporučený kernel, pokud si nejste jisti, který kernel by měl být použit.</li>
+      <li>Používá plánovač <a href="https://github.com/firelzrd/bore-scheduler">BORE</a>.</li>
+      <li>Sestaveno s GCC.</li>
+      <li>Profilováno naším vlastním profilem <a href="https://cachyos.org/blog/2411-kernel-autofdo/">AutoFDO</a> pro zlepšení výkonu. <a href="https://github.com/CachyOS/cachyos-benchmarker/blob/master/kernel-autofdo.sh">Skript</a> použitý pro profilování kernelu.</li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-bore</strong>
+    <ul>
+      <li>Používá plánovač <a href="https://github.com/firelzrd/bore-scheduler">BORE</a>.</li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-bmq</strong>
+    <ul>
+      <li>Používá plánovač BMQ z <a href="https://gitlab.com/alfredchen/projectc/">Project C</a> od Alfreda Chena.
+        <ul>
+          <li><strong>Nepodporuje sched-ext</strong>.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-deckify</strong>
+    <ul>
+      <li>Výchozí kernel pro handheldy. <strong>Není doporučeno</strong> a <strong>nepodporováno</strong> používat na handheldech jakýkoli jiný kernel než tento.</li>
+      <li>Používá plánovač <a href="https://github.com/firelzrd/bore-scheduler">BORE</a>.</li>
+      <li>Specifické patche pro handheldy navíc k základní sadě patchů pro zlepšení kompatibility a celkového zážitku na handheld zařízeních.</li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-eevdf</strong>
+    <ul>
+      <li>Upravuje výchozí plánovač kernelu pro zlepšení odezvy.</li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-lts</strong>
+    <ul>
+      <li>Založeno na nejnovějším Long Term Support kernelu.</li>
+      <li>Používá plánovač <a href="https://github.com/firelzrd/bore-scheduler">BORE</a>.</li>
+      <li>Minimálně opatchován ve srovnání s ostatními kernely pro zajištění maximální stability.</li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-hardened</strong>
+    <ul>
+      <li>Používá plánovač <a href="https://github.com/firelzrd/bore-scheduler">BORE</a>.</li>
+      <li>Zahrnuje sadu patchů <a href="https://github.com/anthraxx/linux-hardened">linux-hardened</a>.</li>
+      <li>Konfigurace kernelu založená na <a href="https://gitlab.archlinux.org/archlinux/packaging/packages/linux-hardened/-/blob/main/config">konfiguraci linux-hardened</a>.
+        <ul>
+          <li>Obsahuje velmi agresivní zabezpečení, které výrazně omezuje výkon a uživatelský zážitek.</li>
+          <li><strong>Nepodporuje sched-ext</strong>.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-rc</strong>
+    <ul>
+      <li>Založeno na nejnovějším mainline kernelu ze <a href="https://github.com/torvalds/linux/">stromu Linuse</a>.</li>
+      <li>Používá plánovač <a href="https://github.com/firelzrd/bore-scheduler">BORE</a>.</li>
+      <li>Hlavní kernel pro zavádění nových funkcí do naší sady patchů.</li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-server</strong>
+    <ul>
+      <li>Vyladěno pro serverové zátěže ve srovnání s desktopovým použitím.
+        <ul>
+          <li>Tickrate 300Hz.</li>
+          <li>Žádná preempce.</li>
+          <li>Standardní EEVDF.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-rt-bore</strong>
+    <ul>
+      <li>Preempce v reálném čase.</li>
+      <li>Používá plánovač <a href="https://github.com/firelzrd/bore-scheduler">BORE</a>.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>:::note
+Pokud není uvedeno jinak, je bezpečné předpokládat, že všechny ostatní varianty kernelu
+mají stejnou konfiguraci jako výchozí kernel.
+:::</p>
+
+<p>Prosím, otevřete issue na <a href="https://github.com/CachyOS/linux-cachyos">linux-cachyos GitHubu</a> pro návrhy a vylepšení, která mohou být přidána do výchozího kernelu.</p>
+
+<h2 id="předkompilované-moduly-kernelu">Předkompilované moduly kernelu</h2>
+
+<p>Aby vyhověl širší uživatelské základně, CachyOS dodává některé dobře známé a hojně používané moduly kernelu spolu s kernelem. To znamená, že uživatelé již nebudou
+muset tyto moduly znovu kompilovat po každé aktualizaci kernelu nebo při každé nové instalaci kernelu, ale budou je muset pouze nainstalovat z repozitáře, protože jsou
+již předkompilované. Tím se efektivně stávají zastaralými jakékoli balíčky <code class="language-plaintext highlighter-rouge">-dkms</code>, které by uživatel mohl mít a které poskytují stejný modul jako předkompilovaná verze.</p>
+
+<h3 id="zfs">ZFS</h3>
+
+<p><a href="https://openzfs.org/wiki/Main_Page">ZFS</a> je jedním z mnoha souborových systémů, které jsou v CachyOS podporovány. Kvůli tomu, že je licencován pod
+<a href="https://opensource.org/license/cddl-1-0">CDDL</a>, je nekompatibilní s licencí linuxového kernelu a proto nemůže být začleněn do hlavního stromu. Dodávaný modul zahrnuje
+nejnovější upstreamové funkce a opravy pro zajištění kompatibility s nejnovějším kernelem.</p>
+
+<h3 id="nvidia">NVIDIA</h3>
+
+<p>CachyOS dodává předkompilované verze jak uzavřených, tak <a href="https://github.com/NVIDIA/open-gpu-kernel-modules/">otevřených</a> modulů kernelu. Kvůli tomu, že vývoj
+modulu kernelu NVIDIA probíhá mimo hlavní strom a tudíž nesleduje vydávací cyklus kernelu, může být standardní konfigurace někdy nekompatibilní s nejnovějším
+kernelem. Jako řešení CachyOS patchuje moduly komunitou vytvořenými patchy nebo patchy sdílenými přímo společností NVIDIA.</p>
+
+<h2 id="ostatní">Ostatní</h2>
+
+<p>Kernel CachyOS má také některé další pozoruhodné vlastnosti, které jsou nenápadné, ale zlepšují uživatelský zážitek.</p>
+
+<ul>
+  <li>Zahrnuje debug variantu kernelu, která poskytuje ne-stripnutý binární soubor kernelu pro účely ladění. Tento balíček je potřebný pro profilování kernelu pomocí AutoFDO.</li>
+  <li><a href="https://developer.android.com/reference/android/os/Binder">Binder</a>, modul potřebný pro <a href="https://waydro.id/">Waydroid</a>, je ve výchozím nastavení povolen v konfiguraci kernelu
+a již <a href="https://github.com/CachyOS/linux-cachyos/blob/master/linux-cachyos/config#L10559">nastaven</a>.</li>
+</ul>
+
+<h2 id="konvence-pojmenování-balíčků">Konvence pojmenování balíčků</h2>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>linux-cachyos <span class="c"># Základní balíček kernelu pro výchozí kernel. Kompilováno s GCC</span>
+linux-cachyos-hardened <span class="c"># Základní balíček kernelu pro hardened kernel. Kompilováno s GCC</span>
+linux-cachyos-hardened-lto <span class="c"># clang-kompilovaný protějšek pro linux-cachyos-hardened</span>
+linux-cachyos-hardened-<span class="o">{</span>,lto-<span class="o">}</span>headers
+linux-cachyos-hardened-<span class="o">{</span>,lto-<span class="o">}</span>nvidia
+linux-cachyos-hardened-<span class="o">{</span>,lto-<span class="o">}</span>nvidia-open
+linux-cachyos-hardened-<span class="o">{</span>,lto-<span class="o">}</span>zfs
+linux-cachyos-hardened-<span class="o">{</span>,lto-<span class="o">}</span>dbg
+</code></pre></div></div>
+
+<h2 id="často-kladené-otázky-faq">Často kladené otázky (FAQ)</h2>
+
+<h3 id="proč-se-autofdo-nepoužívá-pro-všechny-ostatní-varianty-kernelu">Proč se AutoFDO nepoužívá pro všechny ostatní varianty kernelu?</h3>
+
+<p>Protože je jeho sestavení nákladné, v podstatě vyžaduje sestavení kernelu dvakrát, a proto vyžaduje více zdrojů a času věnovaného kompilaci. Proces sestavení kernelu s AutoFDO zahrnuje následující kroky:</p>
+
+<p>1) Sestavení kernelu s povoleným AutoFDO a ladícími schopnostmi.
+2) Vytvoření profilu, což znamená spouštění zátěží za účelem shromáždění profilovacích dat pro možné optimalizace.
+3) Znovu sestavení kernelu s profilem AutoFDO.</p>
+
+<p>Proto je prozatím přítomen pouze ve variantě <a href="/features/kernel#variants">linux-cachyos</a>.</p>
+
+<p>Pro více informací o AutoFDO klikněte <a href="https://cachyos.org/blog/2411-kernel-autofdo/">zde.</a></p>
+
+<h3 id="zlepšuje-kernel-v-reálném-čase-výkon-při-hraní-her">Zlepšuje kernel v reálném čase výkon při hraní her?</h3>
+
+<p>Ne, nezlepšuje. Kernel v reálném čase činí mnohem více kódu preemptibilním ve srovnání s normálním plně preemptibilním kernelem. To znamená, že mnohem více úloh (včetně herních procesů) je často přerušováno a bude nuceně uvolňovat systémové prostředky, což vede k horšímu výkonu.</p>

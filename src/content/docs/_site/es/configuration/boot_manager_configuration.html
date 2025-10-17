@@ -1,0 +1,209 @@
+<h2 id="systemd-boot">systemd-boot</h2>
+
+<p>systemd-boot tiene dos tipos de archivos de configuración: uno para systemd-boot en <code class="language-plaintext highlighter-rouge">/boot/loader/loader.conf</code>, y otro para cada
+entrada de kernel individual en <code class="language-plaintext highlighter-rouge">/boot/loader/entry</code>.</p>
+
+<h3 id="configuración-del-gestor-de-arranque">Configuración del Gestor de Arranque</h3>
+
+<p>En este archivo de configuración, puede cambiar la entrada predeterminada y el tiempo de espera de systemd-boot.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /boot/loader/loader.conf</span>
+
+default @saved
+<span class="nb">timeout </span>5
+<span class="c">#console-mode keep # Esta opción configura la resolución de la consola.</span>
+</code></pre></div></div>
+
+<h3 id="configuración-de-la-línea-de-comandos-del-kernel">Configuración de la línea de comandos del kernel</h3>
+
+<p>Proporcionamos una herramienta para facilitar la configuración de systemd-boot: <a href="https://github.com/CachyOS/CachyOS-PKGBUILDS/tree/master/systemd-boot-manager"><code class="language-plaintext highlighter-rouge">sdboot-manage</code></a>.
+Una de las ventajas de esta herramienta es la configuración global de la línea de comandos del kernel. El archivo de configuración para <code class="language-plaintext highlighter-rouge">sdboot-manage</code> se encuentra en <code class="language-plaintext highlighter-rouge">/etc/sdboot-manage.conf</code>.</p>
+
+<p>Edite la línea <code class="language-plaintext highlighter-rouge">LINUX_OPTIONS=</code> en <code class="language-plaintext highlighter-rouge">/etc/sdboot-manage.conf</code> para cambiar los parámetros del kernel.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /etc/sdboot-manage.conf</span>
+<span class="nv">LINUX_OPTIONS</span><span class="o">=</span><span class="s2">"zswap.enabled=0 nowatchdog quiet splash"</span>
+</code></pre></div></div>
+
+<p>Después de realizar cambios, regenere todas las entradas de systemd-boot con el siguiente comando:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>sdboot-manage gen
+</code></pre></div></div>
+
+<h2 id="refind">rEFInd</h2>
+
+<p>Al igual que <a href="/es/configuration/boot_manager_configuration#systemd-boot">systemd-boot</a>, rEFInd tiene dos archivos de configuración. <code class="language-plaintext highlighter-rouge">refind.conf</code> ubicado en
+<code class="language-plaintext highlighter-rouge">boot/efi/EFI/refind</code> sirve principalmente para cambiar el comportamiento de rEFind, mientras que <code class="language-plaintext highlighter-rouge">/boot/refind_linux.conf</code> es para gestionar sus opciones de arranque.
+<code class="language-plaintext highlighter-rouge">refind.conf</code> contiene comentarios extensos que explican todas sus opciones.</p>
+
+<h3 id="configuración-de-la-línea-de-comandos-del-kernel-1">Configuración de la línea de comandos del kernel</h3>
+
+<p>Para pasar parámetros del kernel a la línea de comandos, modifique “Boot using default options” en <code class="language-plaintext highlighter-rouge">/boot/refind_linux.conf</code></p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /boot/refind_linux.conf</span>
+
+<span class="s2">"Boot using default options"</span>     <span class="s2">"root=PARTUUID=1cb353ec-7f03-4820-8b4b-03baf53a208f rw zswap.enabled=0 nowatchdog quiet splash"</span>
+</code></pre></div></div>
+
+<p>Los cambios en ambos archivos de configuración surtirán efecto inmediatamente. No es necesario ejecutar un comando para “guardar” los cambios.</p>
+
+<h2 id="grub">GRUB</h2>
+
+<p>A diferencia de <a href="/es/configuration/boot_manager_configuration#systemd-boot">systemd-boot</a> y <a href="/es/configuration/boot_manager_configuration#refind">rEFInd</a>,
+GRUB solo tiene un archivo de configuración ubicado en <code class="language-plaintext highlighter-rouge">/etc/default/grub</code>. Hay una documentación bastante buena en este archivo que explica qué
+hace cada opción.</p>
+
+<h3 id="ocultar-el-menú-de-arranque-de-grub">Ocultar el menú de arranque de GRUB</h3>
+
+<p>Para ocultar el menú de GRUB, simplemente configure las siguientes opciones de la manera correspondiente.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /etc/default/grub</span>
+
+<span class="nv">GRUB_TIMEOUT</span><span class="o">=</span><span class="s1">'0'</span>
+<span class="nv">GRUB_TIMEOUT_STYLE</span><span class="o">=</span>hidden
+</code></pre></div></div>
+
+<p>Presione ESC para acceder a la línea de comandos de GRUB. Desde aquí, ejecute <code class="language-plaintext highlighter-rouge">normal</code> o <code class="language-plaintext highlighter-rouge">exit</code> para volver al menú de arranque familiar de GRUB.</p>
+
+<h3 id="configuración-de-la-línea-de-comandos-del-kernel-2">Configuración de la línea de comandos del kernel</h3>
+
+<p>Para pasar parámetros del kernel a la línea de comandos con GRUB, necesitamos editar <code class="language-plaintext highlighter-rouge">GRUB_CMDLINE_LINUX_DEFAULT</code> dentro de <code class="language-plaintext highlighter-rouge">/etc/default/grub</code>.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /etc/default/grub</span>
+
+<span class="nv">GRUB_CMDLINE_LINUX_DEFAULT</span><span class="o">=</span><span class="s1">'nowatchdog zswap.enabled=0 quiet splash'</span>
+</code></pre></div></div>
+
+<p>Cada vez que modificamos el archivo de configuración de GRUB, necesitamos rehacer la configuración con el siguiente comando:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>grub-mkconfig <span class="nt">-o</span> /boot/grub/grub.cfg
+</code></pre></div></div>
+
+<h2 id="limine">Limine</h2>
+
+<p>Limine es un gestor de arranque moderno conocido por su configuración sencilla. Esta guía cubre los conceptos básicos para que pueda empezar.</p>
+
+<p>La configuración se realiza principalmente en <code class="language-plaintext highlighter-rouge">/boot/limine.conf</code> (o a veces en la partición del sistema EFI) para los ajustes del menú, y en <code class="language-plaintext highlighter-rouge">/etc/default/limine</code> para los parámetros del kernel.</p>
+
+<h3 id="configuración-del-menú-de-arranque">Configuración del Menú de Arranque</h3>
+
+<p>Este archivo controla el comportamiento y la apariencia del menú de arranque. Los cambios realizados aquí surten efecto inmediatamente después de guardarlos, no se necesitan comandos adicionales.</p>
+
+<ul>
+  <li>
+    <p><strong>Timeout (Tiempo de espera):</strong> Establece cuántos segundos espera Limine antes de arrancar automáticamente la entrada predeterminada.</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /boot/limine.conf</span>
+
+<span class="nb">timeout</span>: 5
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Default Entry (Entrada predeterminada):</strong> Especifica qué entrada del menú arranca por defecto. Las entradas se numeran a partir de 1. Si no se establece, el valor predeterminado es 1.</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /boot/limine.conf</span>
+
+default_entry: 2 <span class="c"># Arrancar la segunda entrada por defecto</span>
+</code></pre></div>    </div>
+
+    <p>:::tip
+ Si <code class="language-plaintext highlighter-rouge">default_entry</code> apunta a un directorio (por ejemplo, <code class="language-plaintext highlighter-rouge">/+CachyOS</code>), el autoarranque se desactivará. Para arrancar automáticamente una entrada dentro de un directorio, <code class="language-plaintext highlighter-rouge">default_entry</code> debe apuntar directamente al número de esa entrada específica.
+:::</p>
+  </li>
+</ul>
+
+<p>Ejemplo (<code class="language-plaintext highlighter-rouge">/boot/limine.conf</code>):</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /boot/limine.conf</span>
+
+<span class="nb">timeout</span>: 5
+default_entry: 2 <span class="c"># Apunta directamente a la entrada 'linux-cachyos' de abajo</span>
+
+/+CachyOS        <span class="c"># Entrada 1: Un directorio (usar /+ para expandir por defecto)</span>
+//linux-cachyos  <span class="c"># Entrada 2: La entrada arrancable real</span>
+    protocol: linux
+    kernel_path: boot<span class="o">()</span>:/vmlinuz-linux-cachyos
+    cmdline: quiet splash <span class="nv">root</span><span class="o">=</span><span class="nv">UUID</span><span class="o">=</span>... rw <span class="c"># Parámetros básicos del kernel</span>
+    module_path: boot<span class="o">()</span>:/initramfs-linux-cachyos.img
+</code></pre></div></div>
+
+<p>:::note
+<code class="language-plaintext highlighter-rouge">boot():/</code> se refiere a la raíz de la unidad de arranque.
+:::</p>
+
+<h3 id="apariencia-theming">Apariencia (Theming)</h3>
+
+<p>Puede personalizar la apariencia visual del menú de arranque de Limine:</p>
+
+<ul>
+  <li>
+    <p><strong>Wallpaper (Fondo de pantalla):</strong> Establezca una imagen de fondo. Los formatos admitidos incluyen BMP, PNG y JPEG.</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /boot/limine.conf</span>
+
+wallpaper: boot<span class="o">()</span>:/splash.png
+wallpaper_style: stretched <span class="c"># Opciones: 'stretched' (estirado), 'tiled' (mosaico), 'centered' (centrado)</span>
+backdrop: 000000           <span class="c"># Color de fondo (hex RRGGBB) si el estilo es 'centered'</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Fonts (Fuentes):</strong> Use un <a href="https://github.com/viler-int10h/vga-text-mode-fonts">archivo de fuente personalizado</a> y ajuste su tamaño.</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /boot/limine.conf</span>
+
+term_font: boot<span class="o">()</span>:/custom_font.F16
+term_font_scale: 2x2 <span class="c"># Escala el tamaño de la fuente, útil para pantallas de alta resolución</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Colors (Colores):</strong> Modifique los colores del texto y del fondo del terminal.</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /boot/limine.conf</span>
+
+term_background: 80000000 <span class="c"># Ejemplo: Negro semitransparente (AARRGGBB)</span>
+<span class="c"># Otras opciones de color como term_foreground, etc., están disponibles.</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="configuración-de-la-línea-de-comandos-del-kernel-3">Configuración de la Línea de Comandos del Kernel</h3>
+
+<p>En CachyOS, las entradas del kernel en el menú de arranque de Limine se <strong>gestionan automáticamente</strong>. Cuando instala o elimina kernels, el <code class="language-plaintext highlighter-rouge">limine-mkinitcpio-hook</code> utiliza la utilidad <code class="language-plaintext highlighter-rouge">limine-entry-tool</code> en segundo plano para actualizar las entradas de arranque.</p>
+
+<p>Aunque las entradas se manejan automáticamente, puede <strong>configurar los parámetros del kernel</strong> (también conocidos como la línea de comandos del kernel) que se pasan al kernel cuando arranca.</p>
+
+<ol>
+  <li>
+    <p><strong>Edite el archivo de configuración:</strong> Modifique las variables <code class="language-plaintext highlighter-rouge">KERNEL_CMDLINE</code> en <code class="language-plaintext highlighter-rouge">/etc/default/limine</code>. Puede establecer parámetros predeterminados para todos los kernels o parámetros específicos para ciertos nombres de kernel (por ejemplo, <code class="language-plaintext highlighter-rouge">linux-cachyos</code>).</p>
+
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /etc/default/limine</span>
+
+<span class="c"># Parámetros predeterminados para la mayoría de los kernels</span>
+KERNEL_CMDLINE[default]<span class="o">=</span><span class="s2">"quiet splash rd.udev.log_priority=3"</span>
+
+<span class="c"># Parámetros específicos para el kernel 'linux-cachyos'</span>
+KERNEL_CMDLINE[<span class="s2">"linux-cachyos"</span><span class="o">]=</span><span class="s2">"quiet splash mitigations=off"</span>
+
+<span class="c"># Parámetros para las entradas de respaldo (si se generan)</span>
+<span class="c"># KERNEL_CMDLINE[fallback]="..."</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Aplique los cambios:</strong> Después de guardar <code class="language-plaintext highlighter-rouge">/etc/default/limine</code>, necesita regenerar sus imágenes initramfs y actualizar las entradas de Limine para aplicar los nuevos parámetros del kernel. Ejecute el siguiente comando:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>limine-mkinitcpio
+</code></pre></div>    </div>
+
+    <p>Este comando activa el proceso <code class="language-plaintext highlighter-rouge">mkinitcpio</code>, que incluye el <code class="language-plaintext highlighter-rouge">limine-mkinitcpio-hook</code>, asegurando que sus cambios en <code class="language-plaintext highlighter-rouge">/etc/default/limine</code> se incorporen a las entradas de arranque en <code class="language-plaintext highlighter-rouge">/boot/limine.conf</code>.</p>
+  </li>
+</ol>
+
+<h2 id="más-información">Más información</h2>
+
+<ul>
+  <li><a href="https://man.archlinux.org/man/loader.conf.5">Página de manual de loader.conf</a></li>
+  <li><a href="https://www.rodsbooks.com/refind/configfile.html">rEFInd: Configurando el gestor de arranque</a></li>
+  <li><a href="https://www.gnu.org/software/grub/manual/grub/grub.html#Configuration">Manual de GRUB: Configuración</a></li>
+  <li><a href="https://github.com/limine-bootloader/limine/blob/v9.x/CONFIG.md">Documentación Oficial de Configuración de Limine</a></li>
+  <li><a href="https://gitlab.com/Zesko/limine-entry-tool">Proyecto limine-entry-tool</a></li>
+</ul>

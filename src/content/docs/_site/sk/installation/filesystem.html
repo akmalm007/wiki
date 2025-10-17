@@ -1,0 +1,151 @@
+<p>CachyOS ponúka 5 súborových systémov, aby si používateľ mohol vybrať ten, ktorý najlepšie vyhovuje jeho potrebám. Nasledujúci text prejde výhody, nevýhody a odporúčania pre každý súborový systém. Každý súborový systém sa dodáva s predinštalovanými požiadavkami/utilitami v CachyOS.</p>
+
+<p>:::note
+BTRFS je predvolený a odporúčaný súborový systém pre CachyOS. Vyberte ho, ak si nie ste istí.
+:::</p>
+
+<h2 id="xfs">XFS</h2>
+<p>XFS je žurnálovací súborový systém vytvorený a vyvinutý spoločnosťou Silicon Graphics, Inc. Bol vytvorený v roku 1993, prenesený do Linuxu v roku 2001 a teraz je široko podporovaný väčšinou distribúcií Linuxu.</p>
+<h3 id="výhody">Výhody</h3>
+<ul>
+  <li>Rýchly, XFS bol pôvodne navrhnutý s ohľadom na rýchlosť a extrémnu škálovateľnosť.</li>
+  <li>Spoľahlivý, XFS využíva niekoľko technológií na zabránenie poškodeniu dát.</li>
+  <li>Odolný voči fragmentácii vďaka svojej rozsiahlej povahe a stratégii oneskoreného prideľovania.
+    <h3 id="nevýhody">Nevýhody</h3>
+  </li>
+  <li>Nedá sa zmenšiť.</li>
+</ul>
+
+<h3 id="nástroj-používateľského-priestoru">Nástroj používateľského priestoru</h3>
+<p>Balík obsahujúci nástroje používateľského priestoru na správu súborových systémov XFS je <code class="language-plaintext highlighter-rouge">xfsprogs</code>.</p>
+
+<h3 id="odporúčanie">Odporúčanie:</h3>
+<p>XFS je odporúčaný súborový systém pre používateľov, ktorí nepotrebujú pokročilé funkcie a chcú jednoducho rýchly a spoľahlivý súborový systém.</p>
+
+<h2 id="btrfs">BTRFS</h2>
+<p>BTRFS je moderný súborový systém copy-on-write (COW) vytvorený v roku 2007 a vyhlásený za stabilný v jadre Linuxu v roku 2013. Je široko podporovaný a je známy hlavne vďaka svojej pokročilej sade funkcií.</p>
+<h3 id="výhody-1">Výhody</h3>
+<ul>
+  <li>Transparentná kompresia. BTRFS podporuje transparentné komprimovanie súborov, čo umožňuje významnú úsporu miesta bez zásahu používateľa. CachyOS sa štandardne dodáva s kompresiou ZSTD nastavenou na úroveň 3.</li>
+  <li>Funkcia snímok. BTRFS využíva svoju povahu COW na umožnenie vytvárania snímok subvolumov, ktoré zaberajú veľmi málo skutočného miesta.</li>
+  <li>Funkcia subvolumov umožňujúca väčšiu kontrolu nad súborovým systémom.</li>
+  <li>Možnosť zväčšovať alebo zmenšovať.</li>
+  <li>Veľmi rýchly vývoj.
+    <h3 id="nevýhody-1">Nevýhody</h3>
+  </li>
+  <li>Niekedy vyžaduje defragmentáciu alebo vyvažovanie.</li>
+  <li>Horšie na rotačných diskoch kvôli spomínanej fragmentácii.
+    <h3 id="nástroj-používateľského-priestoru-1">Nástroj používateľského priestoru</h3>
+    <p>Balík nástrojov používateľského priestoru Btrfs je <code class="language-plaintext highlighter-rouge">btrfs-progs</code></p>
+  </li>
+</ul>
+
+<h3 id="rozloženie-subvolumov">Rozloženie subvolumov</h3>
+<p>CachyOS poskytuje rozloženie subvolumov hneď po vybalení, aby umožnil jednoduchú funkciu snímok.</p>
+<ul>
+  <li>Subvol @ = /</li>
+  <li>Subvol @home = /home</li>
+  <li>Subvol @root = /root</li>
+  <li>Subvol @srv = /srv</li>
+  <li>Subvol @cache = /var/cache</li>
+  <li>Subvol @tmp = /var/tmp</li>
+  <li>Subvol @log = /var/log</li>
+</ul>
+
+<h3 id="odporúčanie-1">Odporúčanie:</h3>
+<p>BTRFS sa odporúča pre používateľov, ktorí chcú funkciu snímok/zálohovania a transparentnú kompresiu.</p>
+
+<h2 id="ext4">EXT4</h2>
+<p>EXT4 (fourth extended filesystem) je najčastejšie používaný súborový systém Linuxu. EXT4 bol stabilizovaný v jadre Linuxu v roku 2008.</p>
+<h3 id="výhody-2">Výhody</h3>
+<ul>
+  <li>Veľmi bežný, čo umožňuje ľahký prístup k množstvu zdrojov.</li>
+  <li>Spoľahlivý. EXT4 má preukázateľne veľmi spoľahlivú históriu.</li>
+  <li>Možnosť zväčšovať alebo zmenšovať.
+    <h3 id="nevýhody-2">Nevýhody</h3>
+  </li>
+  <li>Postavený na starej kódovej základni.</li>
+  <li>Chýba mu mnoho pokročilých funkcií, ktoré ponúkajú iné súborové systémy.</li>
+</ul>
+
+<h3 id="nástroje-používateľského-priestoru">Nástroje používateľského priestoru</h3>
+<p>Balík na správu ext4 je <code class="language-plaintext highlighter-rouge">e2fsprogs</code></p>
+
+<h3 id="odporúčanie-2">Odporúčanie:</h3>
+<p>EXT4 sa odporúča pre používateľov, ktorí chcú najjednoduchší a najčastejšie používaný súborový systém.</p>
+
+<h2 id="zfs">ZFS</h2>
+
+<p>ZFS je pokročilý súborový systém, ktorý pôvodne vyvinula spoločnosť Sun Microsystems v roku 2005. ZFS má mnoho funkcií, avšak je licencovaný pod CDDL, čo znamená, že nemôže byť zahrnutý do jadra Linuxu a vyžaduje inštaláciu samostatného modulu.</p>
+
+<p>:::caution
+Nepoužívajte jadro Real-time spolu so ZFS, pretože nie je kompatibilné z dôvodu licenčných problémov.
+:::</p>
+
+<h3 id="výhody-3">Výhody</h3>
+<ul>
+  <li>Združené úložisko (zpool)</li>
+  <li>Snímky pomocou COW</li>
+  <li>Kompresia</li>
+  <li>Podpora Raid-Z</li>
+  <li>ARC cache umožňuje neuveriteľne rýchle čítanie bežne používaných súborov.
+    <h3 id="nevýhody-3">Nevýhody</h3>
+  </li>
+  <li>Veľmi komplikované na používanie a pochopenie kvôli funkciám ako zpool a ARC.</li>
+  <li>ARC vyžaduje veľa RAM, aby bol efektívny.</li>
+  <li>Nie je zahrnutý v jadre Linuxu, a preto závisí od modulu jadra tretej strany (OpenZFS)</li>
+  <li>Nekompatibilný s Real-time preempciou</li>
+</ul>
+
+<h3 id="potrebné-nástroje">Potrebné nástroje</h3>
+<p>‘ZFS-Module’ CachyOS poskytuje predkompilovaný modul zfs pre každú verziu jadra.
+<code class="language-plaintext highlighter-rouge">zfs-utils</code> pre nástroje používateľského priestoru.</p>
+
+<h3 id="odporúčanie-3">Odporúčanie:</h3>
+<p>ZFS by mali používať iba pokročilí používatelia, ktorí chcú pokročilé funkcie ZFS, ako je združené úložisko alebo ARC cache.</p>
+
+<h2 id="f2fs">F2FS</h2>
+<p>F2FS alebo Flash-Friendly File System, je súborový systém pre flash pamäte vytvorený a vyvinutý spoločnosťou Samsung pôvodne pre jadro Linuxu. F2FS bol vytvorený špeciálne pre NAND flash používaný v moderných úložiskách.</p>
+<h3 id="výhody-4">Výhody</h3>
+<ul>
+  <li>Navrhnutý s ohľadom na flash pamäte.</li>
+  <li>Transparentná kompresia používaná na zníženie zápisov na disk (Úspora miesta nie je v súčasnosti používateľsky využiteľná)</li>
+  <li>Rýchlejší ako iné súborové systémy, ako napríklad EXT4.</li>
+  <li>Lepšie vyrovnávanie opotrebenia, čím sa predlžuje životnosť NAND flash.
+    <h3 id="nevýhody-4">Nevýhody</h3>
+  </li>
+  <li>Nedá sa zmenšiť.</li>
+  <li>Úsporu miesta z kompresie v súčasnosti nemôže používateľ využiť. Môže to byť pridané v budúcnosti.</li>
+  <li>Relatívne slabý fsck. (kontrola súborového systému)</li>
+  <li>Downgrade na jadro staršie ako verzia, ktorá vytvorila súborový systém, môže spôsobiť problémy.</li>
+</ul>
+
+<h3 id="nástroje-používateľského-priestoru-1">Nástroje používateľského priestoru</h3>
+<p>Hlavným nástrojom pre f2fs je <code class="language-plaintext highlighter-rouge">f2fs-tools</code></p>
+
+<h3 id="odporúčanie-4">Odporúčanie:</h3>
+<p>F2FS sa odporúča iba pre používateľov, ktorí chcú maximalizovať životnosť svojej NAND flash.</p>
+
+<h2 id="bcachefs">BcacheFS</h2>
+<p>Bcachefs je pokročilý nový súborový systém pre Linux s dôrazom na spoľahlivosť a robustnosť a kompletnou sadou funkcií, ktoré by ste očakávali od moderného súborového systému.</p>
+
+<p>:::caution[POZOR]
+Bcachefs sa stále považuje za experimentálny a môže mať problémy.
+:::</p>
+
+<h3 id="výhody-5">Výhody</h3>
+<ul>
+  <li>Copy on write (CoW) - ako BTRFS alebo ZFS</li>
+  <li>Kompresia</li>
+  <li>Caching, Umiestňovanie dát</li>
+  <li>Replika</li>
+  <li>Škálovateľný
+    <h3 id="nevýhody-5">Nevýhody</h3>
+  </li>
+  <li>Experimentálny</li>
+  <li>Nastavenie môže byť komplikované</li>
+</ul>
+
+<h2 id="tldr">TL:DR</h2>
+<p>Použite predvolený súborový systém <strong>BTRFS</strong>, pretože sa považuje za stabilný a má veľa užitočných funkcií (snímky, kompresia atď.). Použite <strong>XFS</strong> alebo <strong>EXT4</strong> pre jednoduchý
+a rýchly súborový systém.</p>

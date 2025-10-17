@@ -1,0 +1,190 @@
+<p>Tento návod popisuje základy použití souboru fstab, který se nachází v /etc/, pro připojení statických disků během spouštění systému. Stručně vysvětlí, jak najít UUID oddílu nebo disku, co znamenají některé volby a kde hledat další informace, pokud by poskytnuté informace nebyly dostatečné.</p>
+
+<h2 id="předpoklady">Předpoklady</h2>
+<ul>
+  <li>Přístup s právy roota</li>
+</ul>
+
+<h2 id="přidávání-záznamů-do-etcfstab">Přidávání záznamů do /etc/fstab</h2>
+
+<h3 id="1-vypište-uuid-vašich-oddílů">1. Vypište UUID vašich oddílů</h3>
+<p>V emulátoru terminálu dle vašeho výběru (Konsole, Alacritty, Kitty atd.) spusťte následující příkaz:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❯ lsblk <span class="nt">-f</span>
+NAME        FSTYPE FSVER LABEL UUID                                 FSAVAIL FSUSE% MOUNTPOINTS
+zram0                                                                              <span class="o">[</span>SWAP]
+nvme0n1
+├─nvme0n1p1 vfat   FAT32       E04D-9F05
+├─nvme0n1p2
+├─nvme0n1p3 ntfs               08A24E90A24E81E4                      715.4G    50%
+├─nvme0n1p4 vfat   FAT32       E09C-D4DA                             628.1M    39% /boot
+├─nvme0n1p5 ext4   1.0         187a9f06-9411-48d9-b941-f03c2e605812  203.6G    47% /
+└─nvme0n1p6 ntfs
+</code></pre></div></div>
+
+<p>V našem příkladu víme, že chceme připojit oddíl s Windows, který je typu ntfs, a víme, že je k dispozici zhruba polovina jeho prostoru. Z toho můžeme usoudit, že oddíl, který chceme připojit, je <code class="language-plaintext highlighter-rouge">nvme0n1p3</code> a jeho UUID je <code class="language-plaintext highlighter-rouge">08A24E90A24E81E4</code>, se souborovým systémem <code class="language-plaintext highlighter-rouge">ntfs</code> v tomto příkladu.</p>
+
+<h3 id="2-identifikace-vašeho-oddílu">2. Identifikace vašeho oddílu</h3>
+
+<p>Často vám <code class="language-plaintext highlighter-rouge">lsblk -f</code> v tomto bodě poskytne všechny informace potřebné k připojení disku přes /etc/fstab. Pokud byste však měli pocit, že informace chybí, můžete spustit následující příkaz:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❯ <span class="nb">sudo </span>fdisk <span class="nt">-l</span>
+Device              Start        End    Sectors  Size Type
+/dev/nvme0n1p1       2048     206847     204800  100M EFI System
+/dev/nvme0n1p2     206848     239615      32768   16M Microsoft reserved
+/dev/nvme0n1p3     239616 2997384182 2997144567  1.4T Microsoft basic data
+/dev/nvme0n1p4 2997385216 2999482367    2097152    1G EFI System
+/dev/nvme0n1p5 2999482368 3905454079  905971712  432G Linux root <span class="o">(</span>x86-64<span class="o">)</span>
+/dev/nvme0n1p6 3905454080 3907026943    1572864  768M Windows recovery environment
+</code></pre></div></div>
+
+<p>V tomto příkladu již známe naše UUID, nicméně <code class="language-plaintext highlighter-rouge">fdisk -l</code> nám to může trochu více objasnit tím, že ukáže přesnou velikost oddílu (1.4T) a také jeho typ (Microsoft basic data).</p>
+
+<p>To by nám mělo naprosto jasně ukázat, že oddíl, který chceme, je <code class="language-plaintext highlighter-rouge">nvme0n1p3</code> s UUID <code class="language-plaintext highlighter-rouge">08A24E90A24E81E4</code>, jak bylo popsáno dříve. Věděli jsme to už předtím, ale teď to víme jistě.</p>
+
+<p>Jakmile jste si jisti, že jste našli správný oddíl, zkopírujte UUID. Kopírování z emulátoru terminálu se obvykle provádí pomocí <code class="language-plaintext highlighter-rouge">ctrl+shift+C</code>.</p>
+
+<h3 id="3-přidání-záznamu-do-etcfstab">3. Přidání záznamu do /etc/fstab</h3>
+
+<p>Nyní, když jsme získali UUID našeho oddílu, je čas otevřít soubor fstab.</p>
+
+<p>Neváhejte použít textový editor dle vašeho výběru, v tomto příkladu použijeme nano. Aby bylo možné soubor fstab editovat, musí být otevřen jako root:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❯ <span class="nb">sudo </span>nano /etc/fstab
+</code></pre></div></div>
+
+<p>Pomocí šipek přejděte na konec souboru fstab a na novém řádku vytvoříme náš nový záznam:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">UUID</span><span class="o">=</span>08A24E90A24E81E4 /media/windows ntfs3 defaults,nofail 0 0
+</code></pre></div></div>
+<p>Rozpis tohoto záznamu je následující:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">UUID=08A24E90A24E81E4</code> Toto je souborový systém, který chceme připojit, identifikovaný podle jeho UUID. Existují i jiné metody identifikace souborového systému, ačkoli UUID bývá nejbezpečnější. Další metody jsou uvedeny <a href="https://wiki.archlinux.org/title/Fstab#Identifying_file_systems">zde</a>.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">/media/windows</code> <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html">Linux Filesystem Hierarchy Standard</a> uvádí, že <code class="language-plaintext highlighter-rouge">/media/</code> je správné místo pro připojování vyměnitelných disků. <code class="language-plaintext highlighter-rouge">windows</code> označuje adresář, do kterého chceme náš disk připojit. Každý disk, který chceme připojit, bude potřebovat svůj vlastní adresář.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">ntfs3</code> Toto je typ souborového systému pro náš souborový systém. V našem příkladu explicitně používáme ovladač kernelu ntfs3. Jinými příklady by byly <code class="language-plaintext highlighter-rouge">ext4</code>, <code class="language-plaintext highlighter-rouge">xfs</code> nebo podobné. Toto explicitní určení typu souborového systému může být nahrazeno <code class="language-plaintext highlighter-rouge">auto</code>, aby příkaz mount mohl provést nejlepší odhad.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">defaults,nofail</code> Volby, které chceme předat příkazu mount pro tento disk. <code class="language-plaintext highlighter-rouge">nofail</code> znamená, že pokud se tento disk nepodaří připojit, nezpůsobí to chybu při spouštění systému. Spouštění bude pokračovat jako obvykle. <code class="language-plaintext highlighter-rouge">defaults</code> znamená standardní sadu logických voleb. Typicky <code class="language-plaintext highlighter-rouge">rw</code>, <code class="language-plaintext highlighter-rouge">ro</code> nebo podobné.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">první 0</code> dump, toto je v moderních systémech obvykle zastaralé. Ponechání této hodnoty na 0 ničemu neuškodí. Více si o tom můžete přečíst <a href="https://linux.die.net/man/8/dump">zde</a>.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">druhá 0</code> Toto nastavuje pořadí pro kontrolu souborového systému při spouštění. Pro kořenový oddíl (pokud váš kořenový souborový systém není btrfs nebo xfs, což by mělo být nastaveno na 0) by to mělo být 1. Všechny ostatní souborové systémy ve vašem fstab by měly mít buď 0 (vypnuto), nebo 2. Více informací <a href="https://man.archlinux.org/man/fsck.8">zde</a>.</p>
+  </li>
+</ul>
+
+<p>Volby jsou mnohem podrobněji vysvětleny <a href="https://man7.org/linux/man-pages/man5/fstab.5.html">zde</a> a <a href="https://man7.org/linux/man-pages/man8/mount.8.html">zde</a>.</p>
+
+<h4 id="další-info">Další info</h4>
+<p>Mimochodem, všechny volby za deklarací typu souborového systému jsou volitelné, pokud je neměníte z výchozího nastavení.</p>
+
+<p>Tedy</p>
+
+<p><code class="language-plaintext highlighter-rouge">UUID=&lt;UUID oddílu&gt; /media/foo somefs</code></p>
+
+<p>a</p>
+
+<p><code class="language-plaintext highlighter-rouge">UUID=&lt;UUID oddílu&gt; /media/foo somefs defaults 0 0</code></p>
+
+<p>jsou ekvivalentní. <code class="language-plaintext highlighter-rouge">somefs</code> následované ničím je implicitně <code class="language-plaintext highlighter-rouge">somefs defaults 0 0</code>.</p>
+
+<h4 id="důležité-pro-oddíly-s-windows">Důležité pro oddíly s Windows</h4>
+
+<p>Pokud postupujete podle tohoto průvodce s oddílem Windows, vaše volby by měly být <code class="language-plaintext highlighter-rouge">uid=1000,gid=1000,rw,user,exec,umask=000</code>, přičemž uid a gid nahradíte vaším ID uživatele a ID skupiny. Pokud neposkytnete oprávnění user a exec, Windows může váš disk uzamknout a nebudete moci nic měnit. To se může stát bez ohledu na oprávnění, pokud nevypnete rychlé spouštění (fast boot).</p>
+
+<p>Pokud nenastavíte umask=000, některé soubory mohou být nezapisovatelné v závislosti na situaci.</p>
+
+<h3 id="4-dokončení">4. Dokončení</h3>
+
+<p>Pokud si přejete nyní připojit disk, pro který jste vytvořili záznam, musíte spustit následující příkaz:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❯ <span class="nb">sudo </span>systemctl daemon-reload
+</code></pre></div></div>
+
+<p>a poté:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❯ <span class="nb">sudo </span>mount <span class="nt">-a</span>
+</code></pre></div></div>
+
+<p>Váš disk by se nyní měl objevit pod <code class="language-plaintext highlighter-rouge">/media/windows</code> a objeví se tam i při příštím spuštění a i v budoucnu.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❯ <span class="nb">ls</span> /media/windows
+<span class="s1">'$Recycle.Bin'</span>             Linux                  SteamLibrary
+ AMD                       Modding                swapfile.sys
+ Apps                      pagefile.sys          <span class="s1">'System Volume Information'</span>
+ bootTel.dat               PerfLogs               Users
+ Development               ProgramData            WiiU
+<span class="s1">'Documents and Settings'</span>  <span class="s1">'Program Files'</span>         Windows
+ DumpStack.log.tmp        <span class="s1">'Program Files (x86)'</span>   XboxGames
+ FanControl                Recovery               xiv_modding
+ Games                     RetroArch-Win64
+ Intel                    <span class="s1">'Ship of Harkinian'</span>
+</code></pre></div></div>
+
+<p>Pokud si přejete vytvořit odkaz na váš nově připojený disk ve vašem domovském adresáři, můžete spustit následující příkaz:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ❯ <span class="nb">ln</span> <span class="nt">-s</span> /media/windows ~/Windows
+</code></pre></div></div>
+
+<p>Pro ověření, že to fungovalo:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ❯ <span class="nb">ls</span> ~/Windows
+ <span class="s1">'$Recycle.Bin'</span>             Linux                  SteamLibrary
+ AMD                       Modding                swapfile.sys
+ Apps                      pagefile.sys          <span class="s1">'System Volume Information'</span>
+ bootTel.dat               PerfLogs               Users
+ Development               ProgramData            WiiU
+<span class="s1">'Documents and Settings'</span>  <span class="s1">'Program Files'</span>         Windows
+ DumpStack.log.tmp        <span class="s1">'Program Files (x86)'</span>   XboxGames
+ FanControl                Recovery               xiv_modding
+ Games                     RetroArch-Win64
+ Intel                    <span class="s1">'Ship of Harkinian'</span>
+</code></pre></div></div>
+
+<h2 id="tldr">tl;dr</h2>
+
+<ul>
+  <li>Najděte UUID vašeho oddílu
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lsblk <span class="nt">-f</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Otevřete /etc/fstab
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>nano /etc/fstab
+</code></pre></div>    </div>
+  </li>
+  <li>Vytvořte záznam na konci souboru
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">UUID</span><span class="o">=</span>&lt;UUID oddílu&gt; /media/foo somefs defaults 0 0
+</code></pre></div>    </div>
+    <p>Nahraďte <code class="language-plaintext highlighter-rouge">&lt;UUID oddílu&gt;</code>, <code class="language-plaintext highlighter-rouge">foo</code> a <code class="language-plaintext highlighter-rouge">somefs</code> vaším UUID, adresářem a souborovým systémem, např. ext4, a také nastavte jakékoli další volby, které byste mohli chtít po defaults, jako je <code class="language-plaintext highlighter-rouge">_netdev</code> pro NAS nebo <code class="language-plaintext highlighter-rouge">nofail</code> pro jakýkoli nekritický disk.</p>
+  </li>
+  <li>Znovu načtěte vaše daemony</li>
+</ul>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❯ <span class="nb">sudo </span>systemctl daemon-reload
+</code></pre></div></div>
+
+<ul>
+  <li>Připojte váš disk
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❯ <span class="nb">sudo </span>mount <span class="nt">-a</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>Tento disk je nyní připojen a bude se připojovat i při každém dalším spuštění.</p>
+
+<h2 id="další-čtení">Další čtení</h2>
+<ul>
+  <li>https://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html - Standard hierarchie souborového systému (Filesystem Hierarchy Standard)</li>
+  <li>https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch03s11.html - FHS o <code class="language-plaintext highlighter-rouge">/media/</code></li>
+  <li>https://linux.die.net/man/8/dump - manuál pro <code class="language-plaintext highlighter-rouge">dump</code></li>
+  <li>https://man.archlinux.org/man/fsck.8 - manuál pro <code class="language-plaintext highlighter-rouge">fsck</code></li>
+  <li>https://man.archlinux.org/man/fstab.5.en - man stránka pro fstab</li>
+  <li>https://wiki.archlinux.org/title/Fstab - Arch Linux wiki pro fstab</li>
+</ul>

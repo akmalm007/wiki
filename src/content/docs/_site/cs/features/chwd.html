@@ -1,0 +1,69 @@
+<p><a href="https://github.com/CachyOS/chwd/">CachyOS Hardware Detection</a> neboli zkráceně <strong><code class="language-plaintext highlighter-rouge">chwd</code></strong> umožňuje zprovoznit širokou škálu hardwaru instalací nezbytných
+balíčků a ovladačů pro daný systém. To zahrnuje systémy s grafickými kartami NVIDIA, počítače T2 Macbook a handheldy jako Steam Deck a ROG Ally.</p>
+
+<h2 id="použití">Použití</h2>
+
+<p><strong><code class="language-plaintext highlighter-rouge">chwd</code></strong> se obvykle spouští během instalace, aby poskytl potřebné balíčky pro systém. Je ale také možné
+použít ho i po instalaci.</p>
+
+<h3 id="automatická-konfigurace">Automatická konfigurace</h3>
+
+<p><strong><code class="language-plaintext highlighter-rouge">chwd</code></strong> podporuje instalaci a konfiguraci nezbytných ovladačů a balíčků, aby systém mohl pracovat za optimálních podmínek.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❯ <span class="nb">sudo </span>chwd <span class="nt">-a</span>
+</code></pre></div></div>
+
+<h3 id="instalace-profilu">Instalace profilu</h3>
+
+<p>Alternativou k výše uvedené metodě je instalace specifického profilu.</p>
+
+<p>```sh title=’Zobrazení všech dostupných profilů’
+❯ chwd –list-all
+╭─────────────────────────┬─────────╮
+│ Název                   ┆ NonFree │
+╞═════════════════════════╪═════════╡
+│ nvidia-open-dkms.prime   ┆ true    │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ nvidia-dkms             ┆ true    │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ macbook-t2              ┆ false   │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ phoenix                  ┆ false   │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ steam-deck              ┆ false   │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ amd                     ┆ false   │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ intel                   ┆ false   │
+╰─────────────────────────┴─────────╯</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+```sh title='Instalace profilu chwd'
+❯ sudo chwd -i amd
+&gt; Instaluji amd ...
+
+&gt; Úspěšně nainstalováno amd
+</code></pre></div></div>
+
+<h3 id="ostatní">Ostatní</h3>
+
+<p>Pro syntaxi příkazů a další možnosti použití nahlédněte do nápovědy <strong><code class="language-plaintext highlighter-rouge">chwd</code></strong>.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❯ chwd <span class="nt">--help</span>
+Použití: chwd <span class="o">[</span>MOŽNOSTI]
+
+Možnosti:
+  <span class="nt">-i</span>, <span class="nt">--install</span> &lt;profil&gt;          Nainstaluje profil
+  <span class="nt">-r</span>, <span class="nt">--remove</span> &lt;profil&gt;           Odstraní profil
+  <span class="nt">-d</span>, <span class="nt">--detail</span>                    Zobrazí detailní informace pro výpisy
+  <span class="nt">-f</span>, <span class="nt">--force</span>                     Vynutí přeinstalaci
+      <span class="nt">--list-installed</span>            Zobrazí nainstalovaná jádra
+      <span class="nt">--list</span>                      Zobrazí dostupné profily pro všechna zařízení
+      <span class="nt">--list-all</span>                  Zobrazí všechny profily
+  <span class="nt">-a</span>, <span class="nt">--autoconfigure</span> <span class="o">[</span>&lt;classid&gt;] Automatická konfigurace
+      <span class="nt">--ai_sdk</span>                    Přepne profily AI SDK
+      <span class="nt">--pmcachedir</span> &lt;PMCACHEDIR&gt;   <span class="o">[</span>výchozí: /var/cache/pacman/pkg]
+      <span class="nt">--pmconfig</span> &lt;PMCONFIG&gt;        <span class="o">[</span>výchozí: /etc/pacman.conf]
+      <span class="nt">--pmroot</span> &lt;PMROOT&gt;            <span class="o">[</span>výchozí: /]
+  <span class="nt">-h</span>, <span class="nt">--help</span>                      Zobrazí nápovědu
+  <span class="nt">-V</span>, <span class="nt">--version</span>                   Zobrazí verzi
+</code></pre></div></div>

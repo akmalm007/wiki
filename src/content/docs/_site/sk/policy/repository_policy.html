@@ -1,0 +1,86 @@
+<p>Zásady používania repozitára CachyOS</p>
+
+<h2 id="1-úvod">1. Úvod</h2>
+
+<p>Repozitár CachyOS je navrhnutý tak, aby poskytoval vysokokvalitné a optimalizované balíky pre používateľov distribúcií CachyOS a ArchLinux. Tieto zásady stanovujú podmienky používania repozitára CachyOS.</p>
+
+<h2 id="2-vylúčenie-záruky">2. Vylúčenie záruky</h2>
+
+<p>Pokiaľ to nevyžadujú platné zákony alebo nie je písomne dohodnuté inak, tím CachyOS poskytuje repozitár na báze <strong>“TAK AKO JE”, BEZ ZÁRUK ALEBO PODMIENOK AKÉHOKOĽVEK DRUHU</strong>, či už výslovných alebo implicitných, vrátane, bez obmedzenia,
+akýchkoľvek záruk alebo podmienok <strong>VLASTNÍCTVA, NEPORUŠOVANIA PRÁV, PREDAJNOSTI ALEBO VHODNOSTI NA KONKRÉTNY ÚČEL</strong>. Vy, ako používatelia repozitára, ste výhradne zodpovední za určenie vhodnosti používania repozitára a preberáte
+akékoľvek riziká spojené s výkonom vašich povolení.</p>
+
+<h2 id="3-obmedzenie-zodpovednosti">3. Obmedzenie zodpovednosti</h2>
+
+<p>V žiadnom prípade a za žiadnej právnej teórie, či už v občianskoprávnom delikte (vrátane nedbanlivosti), zmluve alebo inak, pokiaľ to nevyžadujú platné zákony (ako napríklad úmyselné a hrubo nedbanlivé konanie) alebo nie je písomne dohodnuté inak, tím CachyOS
+nezodpovedá používateľom repozitára za škody, vrátane akýchkoľvek priamych, nepriamych, špeciálnych, náhodných alebo následných škôd akejkoľvek povahy vyplývajúcich z týchto zásad alebo z používania alebo nemožnosti používať repozitár
+(vrátane, ale nie výlučne, škôd za stratu dobrého mena, zastavenie práce, zlyhanie alebo poruchu počítača alebo akékoľvek iné komerčné škody alebo straty), aj keď bol tím CachyOS upozornený na možnosť takýchto škôd.</p>
+
+<h2 id="4-podporovaní-používatelia">4. Podporovaní používatelia</h2>
+
+<p>Repozitár CachyOS (a jeho zrkadlá) poskytuje podporu výhradne pre nasledujúcich používateľov:</p>
+
+<ul>
+  <li>Používatelia CachyOS</li>
+  <li>Používatelia ArchLinux</li>
+</ul>
+
+<h2 id="5-nepodporovaní-používatelia">5. Nepodporovaní používatelia</h2>
+
+<p>Používatelia z iných distribúcií <strong>NIE SÚ PODPOROVANÍ</strong> a <strong>DÔRAZNE SA IM ODPORÚČA</strong>, aby nepoužívali repozitár CachyOS (a jeho zrkadlá). To zahŕňa, ale nie je obmedzené na:</p>
+
+<ul>
+  <li>Manjaro</li>
+  <li>EndeavourOS</li>
+  <li>ArcoLinux</li>
+  <li>Parabola</li>
+  <li>Používatelia akejkoľvek inej distribúcie Linuxu, ktorá nie je výslovne uvedená v sekcii “Podporovaní používatelia”.</li>
+</ul>
+
+<h2 id="5-redтрибуция-repozitára">5. Redтрибуция repozitára</h2>
+
+<p>Tieto zásady definujú “redтрибуцию” ako správanie zahŕňajúce zahrnutie repozitára CachyOS (a jeho zrkadiel) alebo balíkov získaných z repozitára CachyOS ako súčasť distribuovaného obrazu operačného systému alebo sysroots.
+Redтрибуция tiež zahŕňa správanie <strong>distribúcií Linuxu</strong>, ktoré poskytujú nástroje, ktoré umožňujú repozitár CachyOS podľa výberu používateľov, alebo poskytujú akýkoľvek distribuovaný alebo oficiálny dokument, ktorý navádza používateľov na povolenie repozitára CachyOS
+(a jeho zrkadiel) ich vlastnými prostriedkami. Koncoví používatelia a zrkadlá tretích strán nepodliehajú zásadám redтрибуции.</p>
+
+<p>Redтрибуция repozitára CachyOS je výhradne autorizovaná iba pre tím CachyOS.</p>
+
+<h2 id="6-zakázaná-redтрибуция">6. Zakázaná redтрибуция</h2>
+<p>Redтрибуция repozitára CachyOS (a jeho zrkadiel) v akejkoľvek neautorizovanej distribúcii Linuxu, vrátane iných Arch-based distribúcií, je <strong>STRICTNE ZAKÁZANÁ</strong>. To zahŕňa, ale nie je obmedzené na:</p>
+
+<ul>
+  <li>Manjaro</li>
+  <li>EndeavourOS</li>
+  <li>ArcoLinux</li>
+  <li>Parabola</li>
+  <li>Akúkoľvek inú distribúciu Linuxu, ktorá nie je výslovne uvedená v sekcii “Redтрибуция repozitára”.</li>
+</ul>
+
+<h2 id="7-zrkadlenie">7. Zrkadlenie</h2>
+
+<p>Je povolené zrkadliť repozitár prostredníctvom rsync a syncthing. Zrkadlám tretích strán je povolené zrkadliť repozitár a poskytovať preň webový server, pokiaľ zabezpečia, že dáta repozitára zostanú nezmenené.</p>
+
+<h2 id="8-súlad-a-monitorovanie">8. Súlad a monitorovanie</h2>
+
+<p>Vyhradzujeme si právo monitorovať používanie nášho repozitára, aby sme zabezpečili súlad s týmito zásadami. Akékoľvek neoprávnené použitie môže viesť k odvolaniu prístupu.</p>
+
+<h2 id="9-nahlasovanie-porušení">9. Nahlasovanie porušení</h2>
+
+<p>Ak máte podozrenie, že dochádza k porušeniu týchto zásad, nahláste nám to na [admin@cachyos.org].</p>
+
+<h2 id="10-zmeny-zásad">10. Zmeny zásad</h2>
+
+<p>CachyOS si vyhradzuje právo kedykoľvek zmeniť tieto zásady. Zmeny budú oznámené prostredníctvom našich oficiálnych kanálov.</p>
+
+<h2 id="11-kontaktné-informácie">11. Kontaktné informácie</h2>
+
+<p>Ak máte akékoľvek otázky alebo obavy týkajúce sa týchto zásad, kontaktujte nás na:</p>
+
+<ul>
+  <li>E-mail: admin@cachyos.org</li>
+  <li>Webová stránka: https://cachyos.org</li>
+</ul>
+
+<h2 id="12-potvrdenie">12. Potvrdenie</h2>
+
+<p>Používaním repozitára CachyOS (a jeho zrkadiel) potvrdzujete, že ste si prečítali tieto zásady, porozumeli im a súhlasíte s ich dodržiavaním.</p>

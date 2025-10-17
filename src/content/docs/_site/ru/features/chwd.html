@@ -1,0 +1,69 @@
+<p><a href="https://github.com/CachyOS/chwd/">Распознавание оборудования CachyOS</a> (более известное как <code class="language-plaintext highlighter-rouge">chwd</code>) позволяет нам обеспечивать поддержку различного оборудования путём установки необходимых
+пакетов и драйверов для работающей системы. Это включает системы с видеокартами NVIDIA, Macbook с чипом T2 и портативные устройства, такие как Steam Deck и ROG Ally.</p>
+
+<h2 id="использование">Использование</h2>
+
+<p><code class="language-plaintext highlighter-rouge">chwd</code> обычно запускается во время установки для предоставления необходимых пакетов системе. Однако его также можно
+использовать и после установки.</p>
+
+<h3 id="автоматическая-настройка">Автоматическая настройка</h3>
+
+<p><code class="language-plaintext highlighter-rouge">chwd</code> поддерживает установку и настройку необходимых драйверов и пакетов, чтобы система могла работать в оптимальных условиях.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>chwd <span class="nt">-a</span>
+</code></pre></div></div>
+
+<h3 id="установка-профиля">Установка профиля</h3>
+
+<p>Альтернативой вышеуказанному методу является установка каждого конкретного профиля.</p>
+
+<p>```sh title=’Список всех доступных профилей’
+chwd –list-all
+╭─────────────────────────┬─────────╮
+│ Name                    ┆ NonFree │
+╞═════════════════════════╪═════════╡
+│ nvidia-open-dkms.prime  ┆ true    │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ nvidia-dkms             ┆ true    │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ macbook-t2              ┆ false   │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ phoenix                 ┆ false   │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ steam-deck              ┆ false   │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ amd                     ┆ false   │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ intel                   ┆ false   │
+╰─────────────────────────┴─────────╯</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+```sh title='Установка профиля chwd'
+sudo chwd -i amd
+&gt; Installing amd ...
+
+&gt; Successfully installed amd
+</code></pre></div></div>
+
+<h3 id="прочее">Прочее</h3>
+
+<p>Обратитесь к справочной информации <code class="language-plaintext highlighter-rouge">chwd</code> для ознакомления с синтаксисом команд и другими вариантами использования.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chwd <span class="nt">--help</span>
+Usage: chwd <span class="o">[</span>OPTIONS]
+
+Options:
+  <span class="nt">-i</span>, <span class="nt">--install</span> &lt;profile&gt;          Install profile
+  <span class="nt">-r</span>, <span class="nt">--remove</span> &lt;profile&gt;           Remove profile
+  <span class="nt">-d</span>, <span class="nt">--detail</span>                     Show detailed info <span class="k">for </span>listings
+  <span class="nt">-f</span>, <span class="nt">--force</span>                      Force reinstall
+      <span class="nt">--list-installed</span>             List installed kernels
+      <span class="nt">--list</span>                       List available profiles <span class="k">for </span>all devices
+      <span class="nt">--list-all</span>                   List all profiles
+  <span class="nt">-a</span>, <span class="nt">--autoconfigure</span> <span class="o">[</span>&lt;classid&gt;]  Autoconfigure
+      <span class="nt">--ai_sdk</span>                     Toggle AI SDK profiles
+      <span class="nt">--pmcachedir</span> &lt;PMCACHEDIR&gt;    <span class="o">[</span>default: /var/cache/pacman/pkg]
+      <span class="nt">--pmconfig</span> &lt;PMCONFIG&gt;        <span class="o">[</span>default: /etc/pacman.conf]
+      <span class="nt">--pmroot</span> &lt;PMROOT&gt;            <span class="o">[</span>default: /]
+  <span class="nt">-h</span>, <span class="nt">--help</span>                       Print <span class="nb">help</span>
+  <span class="nt">-V</span>, <span class="nt">--version</span>                    Print version
+</code></pre></div></div>

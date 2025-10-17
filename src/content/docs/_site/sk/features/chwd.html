@@ -1,0 +1,69 @@
+<p><a href="https://github.com/CachyOS/chwd/">Detekcia hardvéru CachyOS</a> alebo známejšia ako <strong><code class="language-plaintext highlighter-rouge">chwd</code></strong> nám umožňuje podporovať rôzne druhy hardvéru inštaláciou potrebných
+balíčkov a ovládačov pre spustený systém. To zahŕňa systémy s grafickými kartami NVIDIA, T2 Macbooky a handheld zariadenia ako Steam Deck a ROG Ally.</p>
+
+<h2 id="použitie">Použitie</h2>
+
+<p><strong><code class="language-plaintext highlighter-rouge">chwd</code></strong> sa zvyčajne spúšťa počas inštalácie na poskytnutie potrebných balíčkov pre systém. Je však tiež možné
+ho použiť po inštalácii.</p>
+
+<h3 id="automatická-konfigurácia">Automatická Konfigurácia</h3>
+
+<p><strong><code class="language-plaintext highlighter-rouge">chwd</code></strong> podporuje inštaláciu a konfiguráciu potrebných ovládačov a balíčkov, aby systém mohol pracovať v optimálnych podmienkach.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❯ <span class="nb">sudo </span>chwd <span class="nt">-a</span>
+</code></pre></div></div>
+
+<h3 id="inštalácia-profilu">Inštalácia profilu</h3>
+
+<p>Alternatívou k vyššie uvedenému spôsobu je inštalácia každého špecifického profilu.</p>
+
+<p>```sh title=’Zoznam všetkých dostupných profilov’
+❯ chwd –list-all
+╭─────────────────────────┬─────────╮
+│ Názov                    ┆ NonFree │
+╞═════════════════════════╪═════════╡
+│ nvidia-open-dkms.prime  ┆ true    │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ nvidia-dkms             ┆ true    │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ macbook-t2              ┆ false   │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ phoenix                 ┆ false   │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ steam-deck              ┆ false   │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ amd                     ┆ false   │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ intel                   ┆ false   │
+╰─────────────────────────┴─────────╯</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+```sh title='Inštalácia chwd profilu'
+❯ sudo chwd -i amd
+&gt; Inštaluje sa amd ...
+
+&gt; Úspešne nainštalované amd
+</code></pre></div></div>
+
+<h3 id="ostatné">Ostatné</h3>
+
+<p>Syntax príkazov a ďalšie použitie nájdete vo výstupe pomocníka pre <strong><code class="language-plaintext highlighter-rouge">chwd</code></strong>.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❯ chwd <span class="nt">--help</span>
+Použitie: chwd <span class="o">[</span>OPTIONS]
+
+Možnosti:
+  <span class="nt">-i</span>, <span class="nt">--install</span> &lt;profile&gt;          Inštalovať profil
+  <span class="nt">-r</span>, <span class="nt">--remove</span> &lt;profile&gt;           Odstrániť profil
+  <span class="nt">-d</span>, <span class="nt">--detail</span>                     Zobraziť podrobné informácie pre výpisy
+  <span class="nt">-f</span>, <span class="nt">--force</span>                      Vynútiť preinštaláciu
+      <span class="nt">--list-installed</span>             Zoznam nainštalovaných jadier
+      <span class="nt">--list</span>                       Zoznam dostupných profilov pre všetky zariadenia
+      <span class="nt">--list-all</span>                   Zoznam všetkých profilov
+  <span class="nt">-a</span>, <span class="nt">--autoconfigure</span> <span class="o">[</span>&lt;classid&gt;]  Automatická konfigurácia
+      <span class="nt">--ai_sdk</span>                     Prepnúť profily AI SDK
+      <span class="nt">--pmcachedir</span> &lt;PMCACHEDIR&gt;    <span class="o">[</span>predvolené: /var/cache/pacman/pkg]
+      <span class="nt">--pmconfig</span> &lt;PMCONFIG&gt;        <span class="o">[</span>predvolené: /etc/pacman.conf]
+      <span class="nt">--pmroot</span> &lt;PMROOT&gt;            <span class="o">[</span>predvolené: /]
+  <span class="nt">-h</span>, <span class="nt">--help</span>                       Zobraziť pomocníka
+  <span class="nt">-V</span>, <span class="nt">--version</span>                    Zobraziť verziu
+</code></pre></div></div>

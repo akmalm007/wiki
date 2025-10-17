@@ -1,0 +1,118 @@
+<h1 id="084">0.8.4</h1>
+
+<h2 id="features-">Features ✨</h2>
+
+<ul>
+  <li><strong>Improved Partition Handling:</strong>  Significant refactoring and improvements have been made to how the installer handles partitions, leading to better accuracy and reliability.</li>
+  <li><strong>Kernel Parameter Generation:</strong> The installer now automatically generates kernel parameters based on the detected partition scheme.</li>
+  <li><strong>Enhanced <code class="language-plaintext highlighter-rouge">gucc</code> Library:</strong>  The <code class="language-plaintext highlighter-rouge">gucc</code> library has been significantly enhanced, now encompassing refind installation and configuration capabilities.</li>
+</ul>
+
+<h2 id="chores-">Chores 🧹</h2>
+
+<ul>
+  <li><strong>Clang-Format and Clang-Tidy:</strong> Codebase consistency and quality have been improved through the application of clang-format and clang-tidy.</li>
+  <li><strong>Refactoring with String Views:</strong>  Several areas of the codebase now utilize string_view literals for improved performance and readability.</li>
+  <li><strong>Doctest Implementation:</strong>  C asserts have been replaced with doctest for more robust and informative testing.</li>
+  <li><strong>Refactored Tests:</strong> Test suites have been refactored for clarity and maintainability.</li>
+  <li><strong>Refind Handling in <code class="language-plaintext highlighter-rouge">gucc</code>:</strong>  Refind-related code has been refactored and moved into the <code class="language-plaintext highlighter-rouge">gucc</code> library for better organization and maintainability.</li>
+</ul>
+
+<h2 id="bug-fixes-">Bug Fixes 🐛</h2>
+
+<ul>
+  <li><strong>Btrfs Subvolume Detection:</strong> Issues with detecting existing btrfs subvolumes have been resolved.</li>
+  <li><strong>Partition Information Accuracy:</strong> Improvements have been made to ensure the accurate collection and display of partition information.</li>
+  <li><strong>Root Mount Point for Refind:</strong>  A bug affecting the root mount point used by refind has been fixed.</li>
+  <li><strong>UUID Detection:</strong> The process of detecting partition UUIDs during initialization has been improved.</li>
+  <li><strong>Meson Build Fixes:</strong>  Issues encountered during the meson build process have been addressed.</li>
+  <li><strong>Btrfs Subvolume Appending:</strong>  A bug related to appending btrfs subvolumes in development environments has been fixed.</li>
+  <li><strong>Rootfs in Predefined Configurations:</strong>  An issue with the rootfs of partition schemes derived from predefined configurations has been resolved.</li>
+  <li><strong>Refind Read-Write Mounting:</strong>  Ensured that refind mounts the necessary partitions with read-write permissions.</li>
+</ul>
+
+<h1 id="083">0.8.3</h1>
+
+<h2 id="chores--1">Chores 🧹</h2>
+
+<ul>
+  <li>Updated the CPR dependency to a newer version for improved functionality.</li>
+  <li>Explicitly instructed CTRE (Compile Time Regular Expressions library) to utilize the C++23 standard for consistency and potential performance enhancements.</li>
+  <li>Increased the connection check timeout in the utilities section to accommodate potential network delays or slow responses.</li>
+</ul>
+
+<h1 id="082">0.8.2</h1>
+
+<h2 id="fixes-">Fixes 🐛</h2>
+
+<ul>
+  <li>Resolved an issue where “gucc” didn’t correctly handle btrfs subvolume mountpoints.</li>
+  <li>Improved “gucc” to handle different btrfs subvolume mount statuses.</li>
+</ul>
+
+<h2 id="chores--2">Chores 🧹</h2>
+
+<ul>
+  <li>Fixed a typo in the README file and updated the version information.</li>
+</ul>
+
+<h1 id="081">0.8.1</h1>
+
+<h2 id="fixes--1">Fixes 🐛</h2>
+
+<ul>
+  <li>Resolved an issue where ISA repos were incorrectly enabled on Oracle VM.</li>
+  <li>Addressed command style inconsistencies for improved user experience.</li>
+</ul>
+
+<h2 id="chores--3">Chores 🧹</h2>
+
+<ul>
+  <li>Removed unnecessary ucode logic related to refind, streamlining the codebase.</li>
+</ul>
+
+<h1 id="080">0.8.0</h1>
+
+<h2 id="features--1">Features ✨</h2>
+
+<ul>
+  <li>Added parser for network package profiles.</li>
+  <li>Introduced the ability to fetch environment packages from a TOML file parsed by gucc.</li>
+  <li>Implemented a helper function in gucc to download files from URLs 📥.</li>
+  <li>Added support for fetching network profiles from a URL with a fallback mechanism within gucc.</li>
+  <li>Integrated the installation of network profiles with the binary distribution.</li>
+  <li>Moved the mounting of specified partitions and detection logic into gucc.</li>
+  <li>Introduced <code class="language-plaintext highlighter-rouge">utils::exec_checked</code> for safer execution of external commands.</li>
+</ul>
+
+<h2 id="improvements-">Improvements ✅</h2>
+
+<ul>
+  <li>Enhanced test coverage for crypttab functionality in gucc 🧪.</li>
+  <li>Improved logging in gucc by setting up the logger appropriately.</li>
+  <li><strong>Updated C++ version to C++23</strong> ⬆️.</li>
+  <li>Refactored codebase to utilize C++23 features like <code class="language-plaintext highlighter-rouge">std::ranges</code> and <code class="language-plaintext highlighter-rouge">contains</code> for better readability and efficiency.</li>
+  <li>Refactored various components to utilize <code class="language-plaintext highlighter-rouge">utils::exec_checked</code>.</li>
+</ul>
+
+<h2 id="fixes--2">Fixes 🐛</h2>
+
+<ul>
+  <li>Resolved an issue with hardcoded library types in gucc.</li>
+  <li>Addressed missing logger implementation and header file in gucc.</li>
+  <li>Enabled CPR library for non-development environment builds.</li>
+  <li>Fixed static build process.</li>
+  <li>Addressed issues introduced in commit <a href="https://github.com/CachyOS/New-Cli-Installer/commit/a70e641e364"><code class="language-plaintext highlighter-rouge">a70e641e364</code></a>.</li>
+  <li>Fixed compilation errors in the TUI component.</li>
+  <li>Corrected a dependency issue where FTXUI’s dependency on range-v3 was not public.</li>
+</ul>
+
+<h2 id="chores--4">Chores 🧹</h2>
+
+<ul>
+  <li>Updated CI checks, build processes, and fixed related issues.</li>
+  <li>Removed the reverted installation of network profiles alongside the binary distribution.</li>
+  <li>Refactored and cleaned up code in various components: TUI, utils, chwd_profiles, user, and tests.</li>
+  <li>Removed the unused range-v3 library from installer dependencies.</li>
+  <li>Updated README file.</li>
+</ul>

@@ -1,0 +1,173 @@
+<p>Jadro CachyOS je prispôsobené jadro, ktoré využíva vylepšenia, konfigurácie a patche z upstreamu.</p>
+
+<h2 id="funkcie">Funkcie</h2>
+
+<ul>
+  <li>Výber medzi 3 plánovačmi jadra a rôznymi plánovačmi <a href="/configuration/sched-ext">sched-ext</a> pre lepšiu odozvu</li>
+  <li>Vylepšenia AMD P-State</li>
+  <li>Najnovší BBRv3 od spoločnosti Google</li>
+  <li>le9uo pre výrazne zlepšenú odozvu pri vysokom zaťažení pamäte</li>
+  <li>Aktuálny NTSYNC patchset, používaný s kompatibilnou zostavou wine/proton</li>
+  <li>Kompatibilita so zariadeniami T2 MacOS s patchmi od <a href="https://github.com/t2linux/linux-t2-patches/">t2linux</a></li>
+  <li>Umožňuje čítanie spotreby energie CPU pre každé jadro pre používateľov AMD</li>
+  <li>ACS Override a v412loopback</li>
+  <li>VHBA modul pre emuláciu CD/DVD-ROM zariadení</li>
+  <li>Najnovší ZSTD patchset</li>
+  <li>Rôzne ďalšie patche, ktoré sa zameriavajú na zlepšenie výkonu (optimalizované príznaky kompilátora, kryptografické vylepšenia, úpravy správy pamäte)</li>
+</ul>
+
+<p>Pre rozsiahlejší zoznam patchov, ktoré CachyOS ponúka, si prosím pozrite kompletný
+<a href="https://github.com/CachyOS/linux-cachyos/?tab=readme-ov-file#features">zoznam funkcií</a>, <a href="https://github.com/CachyOS/kernel-patches">úložisko kernel-patches</a>
+a <a href="https://github.com/CachyOS/linux">zdrojový strom Linuxu od CachyOS</a>.</p>
+
+<h2 id="varianty">Varianty</h2>
+
+<p>CachyOS ponúka rôznorodú škálu možností jadra. Všetky jadrá, ktoré poskytujeme, sa dodávajú s <a href="https://github.com/CachyOS/kernel-patches">základným patchsetom CachyOS</a>.
+Pre každé z jadier existuje <a href="#package-naming-convention">zodpovedajúci variant <code class="language-plaintext highlighter-rouge">-lto</code></a>, ktorý je
+zostavený s <a href="https://clang.llvm.org/">clang</a> namiesto <a href="https://gcc.gnu.org/">GCC</a>. Výnimkou sú predvolené jadro a jadro <code class="language-plaintext highlighter-rouge">-rc</code>, pretože sú
+predvolene zostavené s <a href="https://blog.llvm.org/2016/06/thinlto-scalable-and-incremental-lto.html">ThinLTO</a>, a preto majú zodpovedajúce varianty jadra <code class="language-plaintext highlighter-rouge">-gcc</code>.</p>
+
+<ul>
+  <li><strong>linux-cachyos</strong>
+    <ul>
+      <li>Predvolené jadro. Toto je odporúčané jadro, ak si nie ste istí, ktoré jadro by sa malo použiť.</li>
+      <li>Používa plánovač <a href="https://github.com/firelzrd/bore-scheduler">BORE</a>.</li>
+      <li>Predvolene zostavené s clang a ThinLTO na vytvorenie optimalizovanejších binárnych súborov.</li>
+      <li>Profilované s naším vlastným profilom <a href="https://cachyos.org/blog/2411-kernel-autofdo/">AutoFDO</a> pre zlepšený výkon. <a href="https://github.com/CachyOS/cachyos-benchmarker/blob/master/kernel-autofdo.sh">Skript</a> použitý na profilovanie jadra.</li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-bore</strong>
+    <ul>
+      <li>Používa plánovač BORE.</li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-bmq</strong>
+    <ul>
+      <li>Používa plánovač BMQ z <a href="https://gitlab.com/alfredchen/projectc/">Project C</a> od Alfreda Chena.
+        <ul>
+          <li><strong>Nepodporuje sched-ext</strong>.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-deckify</strong>
+    <ul>
+      <li>Predvolené jadro pre handheldy. Používanie akéhokoľvek iného jadra na handheldoch okrem tohto jadra sa <strong>neodporúča</strong> a je <strong>nepodporované</strong>.</li>
+      <li>Používa plánovač BORE.</li>
+      <li>Špecifické patche pre handheldy nad rámec základného patchsetu na zlepšenie kompatibility a celkového zážitku na handheld zariadeniach.</li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-eevdf</strong>
+    <ul>
+      <li>Vylepšuje predvolený plánovač jadra pre zlepšenú odozvu.</li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-lts</strong>
+    <ul>
+      <li>Založené na najnovšom jadre s dlhodobou podporou (Long Term Support).</li>
+      <li>Používa plánovač BORE.</li>
+      <li>Minimálne patchované v porovnaní s inými jadrami na zabezpečenie maximálnej stability.</li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-hardened</strong>
+    <ul>
+      <li>Používa plánovač BORE.</li>
+      <li>Obsahuje patchset <a href="https://github.com/anthraxx/linux-hardened">linux-hardened</a>.</li>
+      <li>Konfigurácia jadra založená na <a href="https://gitlab.archlinux.org/archlinux/packaging/packages/linux-hardened/-/blob/main/config">konfigurácii linux-hardened</a>.
+        <ul>
+          <li>Obsahuje veľmi agresívne hardening, ktorý výrazne obmedzuje výkon a používateľský zážitok.</li>
+          <li><strong>Nepodporuje sched-ext</strong>.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-rc</strong>
+    <ul>
+      <li>Založené na najnovšom mainline jadre z <a href="https://github.com/torvalds/linux/">stromu Linusa</a>.</li>
+      <li>Používa plánovač BORE.</li>
+      <li>Hlavné jadro na zavedenie nových funkcií v našom patchsete.</li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-server</strong>
+    <ul>
+      <li>Ladené pre serverové pracovné zaťaženia v porovnaní s desktopovým používaním.
+        <ul>
+          <li>300Hz <code class="language-plaintext highlighter-rouge">tickrate</code>.</li>
+          <li>Bez preempcie.</li>
+          <li>Stock EEVDF.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-rt-bore</strong>
+    <ul>
+      <li>Preempcia v reálnom čase.</li>
+      <li>Používa plánovač BORE.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Prosím, otvorte issue v <a href="https://github.com/CachyOS/linux-cachyos">linux-cachyos GitHub</a> pre návrhy a vylepšenia, ktoré je možné pridať do predvoleného jadra.</p>
+
+<h2 id="predkompilované-moduly-jadra">Predkompilované Moduly Jadra</h2>
+
+<p>Na uspokojenie väčšej používateľskej základne, CachyOS dodáva niektoré známe a často používané moduly jadra spolu s jadrom. To znamená, že používatelia už nebudú musieť prekompilovať tieto moduly po každej aktualizácii jadra alebo pri každej novej inštalácii jadra, ale budú si ich musieť iba nainštalovať z repozitára, pretože sú už predkompilované. Tým sa efektívne stanú zastaranými všetky balíčky <code class="language-plaintext highlighter-rouge">-dkms</code>, ktoré používateľ môže mať a ktoré poskytujú rovnaký modul ako predkompilovaná verzia.</p>
+
+<h3 id="zfs">ZFS</h3>
+
+<p><a href="https://openzfs.org/wiki/Main_Page">ZFS</a> je jeden z mnohých súborových systémov, ktoré sú podporované v CachyOS. Vzhľadom na to, že je licencovaný pod
+<a href="https://opensource.org/license/cddl-1-0">CDDL</a>, je nekompatibilný s licenciou Linux jadra, a preto nemôže byť zlúčený in-tree. Dodávaný modul obsahuje
+najnovšie upstream funkcie a opravy na zabezpečenie kompatibility s najnovším jadrom.</p>
+
+<h3 id="nvidia">NVIDIA</h3>
+
+<p>CachyOS dodáva obe predkompilované verzie close-source a <a href="https://github.com/NVIDIA/open-gpu-kernel-modules/">open-source</a> modulov jadra. Vzhľadom na vývoj
+jadrového modulu NVIDIA mimo stromu, a teda nesleduje kadenciu vydávania jadra, môže byť štandardná konfigurácia niekedy nekompatibilná s najnovším
+jadrom. Ako obchádzku, CachyOS patchuje moduly s komunitou vytvorenými patchmi alebo patchmi zdieľanými priamo spoločnosťou NVIDIA.</p>
+
+<h2 id="iné">Iné</h2>
+
+<p>Jadro CachyOS má aj niektoré ďalšie pozoruhodné funkcie, ktoré sú nenápadné, ale zlepšujú používateľský zážitok</p>
+
+<ul>
+  <li>Obsahuje debug variantu jadra, ktorá poskytuje neodstránený binárny súbor jadra na účely ladenia. Tento balík je potrebný na profilovanie jadra pomocou AutoFDO.</li>
+  <li><a href="https://developer.android.com/reference/android/os/Binder">Binder</a>, modul potrebný pre <a href="https://waydro.id/">Waydroid</a>, je predvolene povolený v konfigurácii jadra
+a už <a href="https://github.com/CachyOS/linux-cachyos/blob/master/linux-cachyos/config#L10559">nastavený</a>.</li>
+</ul>
+
+<h2 id="konvencia-pomenovania-balíkov">Konvencia Pomenovania Balíkov</h2>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>linux-cachyos <span class="c"># Základný balík jadra pre predvolené jadro. Kompilované s clang</span>
+linux-cachyos-gcc <span class="c"># Protipól pre linux-cachyos kompilovaný pomocou GCC</span>
+linux-cachyos-<span class="o">{</span>,gcc-<span class="o">}</span>headers <span class="c"># Hlavičky jadra, hlavne pre zostavovanie</span>
+linux-cachyos-<span class="o">{</span>,gcc-<span class="o">}</span>nvidia <span class="c"># Predkompilované closed source NVIDIA moduly pre jadro linux-cachyos</span>
+linux-cachyos-<span class="o">{</span>,gcc-<span class="o">}</span>nvidia-open
+linux-cachyos-<span class="o">{</span>,gcc-<span class="o">}</span>zfs <span class="c"># Predkompilované ZFS moduly pre jadro linux-cachyos</span>
+linux-cachyos-<span class="o">{</span>,gcc-<span class="o">}</span>dbg <span class="c"># Neodstránený binárny súbor linuxu pre ladenie</span>
+
+linux-cachyos-hardened <span class="c"># Základný balík jadra pre hardened jadro. Kompilované s GCC</span>
+linux-cachyos-hardened-lto <span class="c"># Protipól pre linux-cachyos-hardened kompilovaný pomocou clang</span>
+linux-cachyos-hardened-<span class="o">{</span>,lto-<span class="o">}</span>headers
+linux-cachyos-hardened-<span class="o">{</span>,lto-<span class="o">}</span>nvidia
+linux-cachyos-hardened-<span class="o">{</span>,lto-<span class="o">}</span>nvidia-open
+linux-cachyos-hardened-<span class="o">{</span>,lto-<span class="o">}</span>zfs
+linux-cachyos-hardened-<span class="o">{</span>,lto-<span class="o">}</span>dbg
+</code></pre></div></div>
+
+<h2 id="faq">FAQ</h2>
+
+<h3 id="prečo-sa-autofdo-nepoužíva-pre-všetky-ostatné-varianty-jadra">Prečo sa AutoFDO nepoužíva pre všetky ostatné varianty jadra?</h3>
+
+<p>Pretože je náročné na zostavenie, keďže v podstate vyžaduje dvojité zostavenie jadra, a preto si vyžaduje viac zdrojov a času venovaného kompilácii. Proces zostavovania jadra s AutoFDO zahŕňa nasledujúce kroky:</p>
+
+<p>1) Zostavenie jadra s povoleným AutoFDO a možnosťami ladenia.
+2) Vytvorenie profilu, čo znamená vykonávanie pracovných zaťažení na zhromažďovanie profilovacích údajov pre možné optimalizácie.
+3) Opätovné zostavenie jadra s profilom AutoFDO.</p>
+
+<p>Preto je zatiaľ prítomný iba vo variante <a href="/features/kernel#linux-cachyos-default-kernel">linux-cachyos</a>.</p>
+
+<p>Viac informácií o AutoFDO nájdete <a href="https://cachyos.org/blog/2411-kernel-autofdo/">tu.</a></p>
+
+<h3 id="zlepšuje-realtime-jadro-výkon-v-hrách">Zlepšuje realtime jadro výkon v hrách?</h3>
+
+<p>Nie, nezlepšuje. Realtime jadro robí oveľa viac kódu preemptibilným v porovnaní s normálnym plne preemptibilným jadrom. To znamená, že oveľa viac úloh (vrátane herných procesov) je často preemptovaných a násilne uvoľní systémové zdroje, čo vedie k horšiemu výkonu.</p>

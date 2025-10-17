@@ -1,0 +1,60 @@
+<p>CachyOS nabízí vyladěný a kompletní zážitek z Arch Linuxu s uživatelsky přívětivým instalátorem, předkonfigurovanými pracovními prostředími a optimalizacemi výkonu bez kompromisů v oblasti uživatelského zážitku a bezpečnosti systému.</p>
+
+<p>Níže jsou uvedeny některé z klíčových vlastností, které CachyOS poskytuje k zajištění vylepšeného zážitku z používání desktopu.</p>
+
+<h2 id="optimalizované-balíčky-a-repozitáře">Optimalizované balíčky a repozitáře</h2>
+
+<p>CachyOS nabízí velký výběr optimalizovaných balíčků pro různé hardwarové konfigurace, včetně systémů <code class="language-plaintext highlighter-rouge">x86-64-v3</code>, <code class="language-plaintext highlighter-rouge">x86-64-v4</code> a <code class="language-plaintext highlighter-rouge">Zen4+</code>, pro zlepšení celkového výkonu.</p>
+
+<p>Pro více informací se podívejte na <a href="/features/optimized_repos"><strong>Optimalizované repozitáře.</strong></a></p>
+
+<h2 id="vlastní-kernel-vyladěný-pro-výkon-a-stabilitu">Vlastní kernel vyladěný pro výkon a stabilitu</h2>
+
+<p>Kromě základní sady patchů pro kernel CachyOS, která ladí různé parametry kernelu pro zlepšení odezvy desktopu, CachyOS pečlivě vybírá sady patchů, které ještě nebyly začleněny do hlavní větve (mainlined) nebo nejsou zahrnuty ve stabilní revizi kernelu.</p>
+
+<p>Tyto patche proto procházejí interním testováním, než jsou uvolněny uživatelům, aby se zajistilo, že stabilita nebude ovlivněna. Pro kompletní seznam patchů, které CachyOS poskytuje, se podívejte na <a href="/features/kernel">Kernel</a>.</p>
+
+<h2 id="podpora-vlastních-cpu-plánovačů">Podpora vlastních CPU plánovačů</h2>
+
+<p>Ve výchozím stavu je EEVDF naladěn tak, aby spravedlivě rozděloval dostupný čas CPU mezi všechny úlohy a je zaměřen především na zátěže orientované na propustnost. Kernel CachyOS <a href="https://github.com/CachyOS/linux/blob/6.15/cachy/kernel/sched/fair.c#L79-81"><strong>konfiguruje některé laditelné parametry EEVDF</strong></a>, aby upřednostnil interaktivitu desktopu.</p>
+
+<p>EEVDF však nebyl od návrhu určen pro použití v oblasti interaktivity desktopu. S ohledem na to CachyOS dodává kernely s patchem plánovače <a href="https://github.com/firelzrd/bore-scheduler">BORE (Burst-Oriented Response Enhancer)</a>, který vylepšuje EEVDF pro zlepšení interaktivity při vysoké zátěži.</p>
+
+<p>Ve verzi 6.12 zavedl linuxový kernel možnost připojovat za běhu (hotplug) BPF plánovače a nahradit EEVDF jiným plánovačem.</p>
+
+<p>Pro více informací o kernelech nabízených CachyOS a plánovačích sched-ext se podívejte na <a href="/features/kernel">Kernel</a> a <a href="/configuration/sched-ext">sched-ext</a>.</p>
+
+<h2 id="detekce-hardwaru">Detekce hardwaru</h2>
+
+<p>CachyOS obsahuje vlastní nástroj pro detekci hardwaru, který automaticky identifikuje a instaluje potřebné ovladače a balíčky pro každý systém, což uživatelům zjednodušuje proces po instalaci.</p>
+
+<h2 id="přizpůsobitelný-proces-instalace">Přizpůsobitelný proces instalace</h2>
+
+<p>Instalátor CachyOS umožňuje uživatelům přizpůsobit si systém výběrem pracovního prostředí, balíčků, souborového systému, zavaděče, kernelu a dalších prvků podle svých potřeb:</p>
+<ul>
+  <li><a href="/installation/desktop_environments/"><strong>Pracovní prostředí</strong></a></li>
+  <li><a href="/installation/boot_managers/"><strong>Zavaděče</strong></a></li>
+  <li><a href="/features/kernel#variants"><strong>Varianty kernelu</strong></a></li>
+  <li><a href="/installation/filesystem"><strong>Souborové systémy</strong></a></li>
+  <li><a href="https://github.com/CachyOS/cachyos-calamares/blob/cachyos-limine-qt6/src/modules/netinstall/netinstall.yaml"><strong>Vlastní balíčky k zahrnutí během instalace</strong></a></li>
+</ul>
+
+<h2 id="aplikace-cachyos">Aplikace CachyOS</h2>
+
+<p>Ve výchozím nastavení poskytuje CachyOS vlastní sadu aplikací, jako jsou CachyOS Hello a CachyOS Package Installer.</p>
+
+<p>Seznam aplikací, které CachyOS v současné době vyvíjí a udržuje:</p>
+
+<ul>
+  <li><a href="https://github.com/CachyOS/kernel-manager"><strong>CachyOS Kernel Manager</strong></a>: Snadno instalujte kernely z repozitáře nebo si nakonfigurujte vlastní kernel a zahrňte vlastní patche a dokonce spravujte framework sched-ext pomocí <a href="https://github.com/sched-ext/scx/tree/main/rust/scx_loader"><strong>scx_loader</strong></a>.</li>
+  <li><a href="https://github.com/CachyOS/CachyOS-Welcome"><strong>CachyOS Hello</strong></a>: Aplikace pro ovládání úprav, aplikování oprav, instalaci balíčků a další informace o CachyOS.</li>
+  <li><a href="https://github.com/CachyOS/packageinstaller"><strong>CachyOS Package Installer</strong></a>: GUI pro snadnou instalaci aplikací.</li>
+  <li><a href="https://github.com/CachyOS/rate-mirrors"><strong>cachyos-rate-mirrors</strong></a>: Automaticky seřadí zrcadla Arch a CachyOS pro optimální rychlost stahování pomocí pacmana.</li>
+  <li><a href="https://github.com/CachyOS/systemd-boot-manager"><strong>systemd-boot-manager</strong></a>: Automaticky generuje nové položky pro zavaděč systemd-boot a lze jej snadno konfigurovat v <code class="language-plaintext highlighter-rouge">/etc/sdboot-manage.conf</code>.</li>
+</ul>
+
+<h2 id="přátelská-a-aktivní-komunita">Přátelská a aktivní komunita</h2>
+
+<p>Největší silou CachyOS je jeho rozrůstající se komunita. Bez její podpory by CachyOS nedosáhl svého současného úspěchu. Členové komunity si navzájem pomáhají sdílením tipů a triků pro vylepšení zážitku s Linuxem.</p>
+
+<p>Připojte se k nám na <a href="https://discord.com/invite/cachyos-862292009423470592"><strong>CachyOS Discordu</strong></a> a na <a href="https://discuss.cachyos.org/"><strong>CachyOS Fóru</strong></a>.</p>

@@ -1,0 +1,220 @@
+<p>Der CachyOS-Kernel ist ein angepasster Kernel, der Verbesserungen, Konfigurationen und Patches aus Upstream-Quellen nutzt.</p>
+
+<h2 id="funktionen">Funktionen</h2>
+
+<h3 id="leistungsoptimierungen">Leistungsoptimierungen</h3>
+
+<ul>
+  <li><strong>Erweiterte Kompilierung</strong>: Hochgradig anpassbares PKGBUILD mit Unterstützung für sowohl GCC- als auch Clang-Compiler</li>
+  <li><strong>Link Time Optimization (LTO)</strong>: Thin LTO ist standardmäßig für bessere Leistung aktiviert</li>
+  <li><strong>Profilgesteuerte Optimierung</strong>: AutoFDO + Propeller-Profiling für optimale Code-Generierung (<a href="https://cachyos.org/blog/2411-kernel-autofdo/">Erfahre mehr</a>)</li>
+  <li><strong>Kernel Control Flow Integrity (kCFI)</strong>: Verfügbar bei Verwendung von LLVM für erhöhte Sicherheit</li>
+  <li><strong>Timer-Frequenz-Optionen</strong>: Konfigurierbar zwischen 300Hz, 500Hz, 600Hz, 750Hz und 1000Hz (Standard: 1000Hz)</li>
+  <li><strong>Architekturoptimierungen</strong>: Unterstützung für x86-64-v3, x86-64-v4 und AMD Zen4 spezifische Builds</li>
+  <li><strong>Compiler-Optimierungen</strong>: Erweiterte GCC-Flags wie <code class="language-plaintext highlighter-rouge">-fivopts</code> und <code class="language-plaintext highlighter-rouge">-fmodulo-sched</code></li>
+</ul>
+
+<h3 id="cpu-verbesserungen">CPU-Verbesserungen</h3>
+
+<ul>
+  <li><strong>Mehrere Scheduler</strong>: BORE-, EEVDF- und BMQ-Scheduler für unterschiedliche Workload-Optimierungen</li>
+  <li><strong>AMD P-State-Verbesserungen</strong>: Unterstützung für „Preferred Core“ und die neuesten amd-pstate-Verbesserungen aus linux-next</li>
+  <li><strong>Echtzeit-Unterstützung</strong>: RT-Kernel-Builds mit BORE-Scheduler-Integration verfügbar</li>
+  <li><strong>CachyOS Sauce</strong>: Eigene <code class="language-plaintext highlighter-rouge">CONFIG_CACHY</code>-Konfiguration mit Scheduler- und System-Tweaks</li>
+  <li><strong>Optimierungen für niedrige Latenz</strong>: Patches für verbesserte Reaktionsfähigkeit und reduzierten Jitter</li>
+</ul>
+
+<h3 id="dateisystem--speicher">Dateisystem &amp; Speicher</h3>
+
+<ul>
+  <li><strong>ZFS-Unterstützung</strong>: Integrierte ZFS-Dateisystemunterstützung mit vorkompilierten Modulen</li>
+  <li><strong>NVIDIA-Integration</strong>:
+    <ul>
+      <li>Proprietäre NVIDIA-Treibermodule mit Patches</li>
+      <li>Unterstützung für Open-Source-NVIDIA-Treiber</li>
+      <li>Gebrauchsfertige Module im Repository</li>
+    </ul>
+  </li>
+  <li><strong>I/O-Scheduler-Verbesserungen</strong>:
+    <ul>
+      <li>Verbesserte Leistung von BFQ und mq-deadline</li>
+      <li>Unterstützung für den alternativen <a href="https://github.com/firelzrd/adios">ADIOS</a>-I/O-Scheduler</li>
+    </ul>
+  </li>
+  <li><strong>Speicherverwaltung</strong>:
+    <ul>
+      <li><a href="https://github.com/firelzrd/le9uo">le9uo</a>-Patch zur Verhinderung von „Page Thrashing“ bei Speicherdruck</li>
+      <li>Zen-Kernel-Speicherverwaltungs-Tweaks (Compaction, Watermark-Optimierung)</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="zusätzliche-funktionen">Zusätzliche Funktionen</h3>
+
+<h4 id="hardware-unterstützung">Hardware-Unterstützung</h4>
+<ul>
+  <li><strong>Gaming-Hardware</strong>: Steam-Deck-Patches (Audio, HW-Quirks, HID) und ROG-Ally-Unterstützung</li>
+  <li><strong>Apple-Hardware</strong>: T2-MacBook-Unterstützung standardmäßig enthalten</li>
+  <li><strong>ASUS-Hardware</strong>: Erweiterte Kompatibilitäts-Patches für ASUS-Hardware</li>
+  <li><strong>Grafik</strong>: HDR-Unterstützung aktiviert, AMDGPU min_powercap-Überschreibung (<code class="language-plaintext highlighter-rouge">amdgpu_ignore_min_pcap</code>)</li>
+</ul>
+
+<h4 id="systemverbesserungen">Systemverbesserungen</h4>
+<ul>
+  <li><strong>Multimedia</strong>: v4l2loopback-Module standardmäßig enthalten</li>
+  <li><strong>Virtualisierung</strong>: ACS-Override-Unterstützung für VFIO/GPU-Passthrough</li>
+  <li><strong>Upstream-Integration</strong>: Ausgesuchte Patches von Clear Linux und linux-next</li>
+</ul>
+
+<h4 id="sonstiges">Sonstiges</h4>
+
+<p>Der CachyOS-Kernel hat auch einige andere bemerkenswerte Funktionen, die subtil sind, aber die Benutzererfahrung verbessern:</p>
+
+<ul>
+  <li>Enthält eine Debug-Variante des Kernels, die eine unbereinigte Kernel-Binärdatei für Debugging-Zwecke bereitstellt. Dieses Paket wird benötigt, um den Kernel mit AutoFDO zu profilieren.</li>
+  <li><a href="https://developer.android.com/reference/android/os/Binder">Binder</a>, das für <a href="https://waydro.id/">Waydroid</a> benötigte Modul, ist standardmäßig in der Kernel-Konfiguration aktiviert
+und bereits <a href="https://github.com/CachyOS/linux-cachyos/blob/master/linux-cachyos/config#L10784">eingerichtet</a>.</li>
+</ul>
+
+<h2 id="varianten">Varianten</h2>
+
+<p>CachyOS bietet eine vielfältige Auswahl an Kernel-Optionen. Alle von uns bereitgestellten Kernel werden mit dem <a href="https://github.com/CachyOS/kernel-patches">CachyOS Base Patchset</a> ausgeliefert.
+Für jeden der Kernel gibt es eine <a href="#paket-namenskonvention">entsprechende <code class="language-plaintext highlighter-rouge">-lto</code>-Variante</a>, die
+mit <a href="https://clang.llvm.org/">clang</a> anstelle von <a href="https://gcc.gnu.org/">GCC</a> gebaut wird.</p>
+
+<ul>
+  <li><strong>linux-cachyos</strong>
+    <ul>
+      <li>Der Standard-Kernel. Das ist der empfohlene Kernel, wenn du unsicher bist, welchen du verwenden sollst.</li>
+      <li>1000Hz Tickrate für verbesserte Reaktionsfähigkeit.</li>
+      <li>Verwendet den <a href="https://github.com/firelzrd/bore-scheduler">BORE</a>-Scheduler.</li>
+      <li>Gebaut mit Clang und ThinLTO.</li>
+      <li>Profiliert mit unserem eigenen <a href="https://cachyos.org/blog/2411-kernel-autofdo/">AutoFDO</a>-Profil für verbesserte Leistung. <a href="https://github.com/CachyOS/cachyos-benchmarker/blob/master/kernel-autofdo.sh">Skript</a>, das zum Profilieren des Kernels verwendet wird.</li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-bore</strong>
+    <ul>
+      <li>Verwendet den <a href="https://github.com/firelzrd/bore-scheduler">BORE</a>-Scheduler.</li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-bmq</strong>
+    <ul>
+      <li>Verwendet den BMQ-Scheduler aus <a href="https://gitlab.com/alfredchen/projectc/">Project C</a> von Alfred Chen.
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">Unterstützt sched-ext nicht.</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-deckify</strong>
+    <ul>
+      <li>Der Standard-Kernel für Handhelds. Es wird <strong>nicht empfohlen</strong> und ist <strong>nicht unterstützt</strong>, einen anderen Kernel auf Handhelds zu verwenden.</li>
+      <li>Verwendet den <a href="https://github.com/firelzrd/bore-scheduler">BORE</a>-Scheduler.</li>
+      <li>Handheld-spezifische Patches zusätzlich zum Basis-Patchset, um die Kompatibilität und das allgemeine Erlebnis auf Handheld-Geräten zu verbessern.</li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-eevdf</strong>
+    <ul>
+      <li>Passt den Standard-Kernel-Scheduler für verbesserte Reaktionsfähigkeit an.</li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-lts</strong>
+    <ul>
+      <li>Basiert auf dem neuesten Long Term Support Kernel.</li>
+      <li>Verwendet den <a href="https://github.com/firelzrd/bore-scheduler">BORE</a>-Scheduler.</li>
+      <li>Minimal gepatcht im Vergleich zu anderen Kerneln, um maximale Stabilität zu gewährleisten.</li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-hardened</strong>
+    <ul>
+      <li>Verwendet den <a href="https://github.com/firelzrd/bore-scheduler">BORE</a>-Scheduler.</li>
+      <li>Enthält das <a href="https://github.com/anthraxx/linux-hardened">linux-hardened</a>-Patchset.</li>
+      <li>Kernel-Konfiguration basiert auf der <a href="https://gitlab.archlinux.org/archlinux/packaging/packages/linux-hardened/-/blob/main/config">linux-hardened config</a>.
+        <ul>
+          <li>Enthält sehr aggressive Härtungsmaßnahmen, die die Leistung und Benutzererfahrung erheblich beeinträchtigen.</li>
+          <li><code class="language-plaintext highlighter-rouge">Unterstützt sched-ext nicht.</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-rc</strong>
+    <ul>
+      <li>Basiert auf dem neuesten Mainline-Kernel aus <a href="https://github.com/torvalds/linux/">Linus’ Tree</a>.</li>
+      <li>Verwendet den <a href="https://github.com/firelzrd/bore-scheduler">BORE</a>-Scheduler.</li>
+      <li>Haupt-Kernel zur Einführung neuer Funktionen in unserem Patchset.</li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-server</strong>
+    <ul>
+      <li>Abgestimmt auf Server-Workloads im Vergleich zur Desktop-Nutzung.
+        <ul>
+          <li>300Hz Tickrate.</li>
+          <li>Keine Preemption.</li>
+          <li>Standard-EEVDF.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>linux-cachyos-rt-bore</strong>
+    <ul>
+      <li>Echtzeit-Preemption.</li>
+      <li>Verwendet den <a href="https://github.com/firelzrd/bore-scheduler">BORE</a>-Scheduler.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>:::note
+Sofern nicht anders angegeben, kannst du davon ausgehen, dass alle anderen Kernel-Varianten
+dieselbe Konfiguration wie der Standard-Kernel haben.
+:::</p>
+
+<p>Bitte eröffne ein Issue im <a href="https://github.com/CachyOS/linux-cachyos">linux-cachyos GitHub</a> für Vorschläge und Verbesserungen, die dem Standard-Kernel hinzugefügt werden können.</p>
+
+<h3 id="paket-namenskonvention">Paket-Namenskonvention</h3>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>linux-cachyos <span class="c"># Basis-Kernel-Paket für den Standard-Kernel. Kompiliert mit Clang und ThinLTO</span>
+linux-cachyos-hardened <span class="c"># Basis-Kernel-Paket für den gehärteten Kernel. Kompiliert mit GCC</span>
+linux-cachyos-hardened-lto <span class="c"># mit clang kompiliertes Gegenstück zu linux-cachyos-hardened</span>
+linux-cachyos-hardened-<span class="o">{</span>,lto-<span class="o">}</span>headers
+linux-cachyos-hardened-<span class="o">{</span>,lto-<span class="o">}</span>nvidia
+linux-cachyos-hardened-<span class="o">{</span>,lto-<span class="o">}</span>nvidia-open
+linux-cachyos-hardened-<span class="o">{</span>,lto-<span class="o">}</span>zfs
+linux-cachyos-hardened-<span class="o">{</span>,lto-<span class="o">}</span>dbg
+</code></pre></div></div>
+
+<h2 id="vorkompilierte-kernel-module">Vorkompilierte Kernel-Module</h2>
+
+<p>Um eine größere Nutzerbasis zu unterstützen, liefert CachyOS einige bekannte und häufig genutzte Kernel-Module zusammen mit dem Kernel aus. Das bedeutet, dass du diese
+Module nicht mehr nach jedem Kernel-Update oder bei jeder neuen Kernel-Installation neu kompilieren musst, sondern sie nur aus dem Repository installieren musst, da sie
+bereits vorkompiliert sind. Das macht jegliche <code class="language-plaintext highlighter-rouge">-dkms</code>-Pakete, die du möglicherweise hast und die das gleiche Modul wie die vorkompilierte Version bereitstellen, effektiv überflüssig.</p>
+
+<h3 id="zfs">ZFS</h3>
+
+<p><a href="https://openzfs.org/wiki/Main_Page">ZFS</a> ist eines der vielen Dateisysteme, die in CachyOS unterstützt werden. Da es unter der
+<a href="https://opensource.org/license/cddl-1-0">CDDL</a> lizenziert ist, ist es mit der Lizenz des Linux-Kernels inkompatibel und kann daher nicht in den Haupt-Kernel-Baum aufgenommen werden. Das ausgelieferte Modul enthält
+die neuesten Upstream-Funktionen und -Fixes, um die Kompatibilität mit dem neuesten Kernel zu gewährleisten.</p>
+
+<h3 id="nvidia">NVIDIA</h3>
+
+<p>CachyOS liefert sowohl vorkompilierte Versionen der Closed-Source- als auch der <a href="https://github.com/NVIDIA/open-gpu-kernel-modules/">Open-Source</a>-Kernelmodule. Da die Entwicklung
+des NVIDIA-Kernelmoduls außerhalb des Haupt-Kernel-Baums stattfindet und somit nicht dem Veröffentlichungsrhythmus des Kernels folgt, kann die Standardkonfiguration manchmal mit dem neuesten
+Kernel inkompatibel sein. Als Workaround patcht CachyOS die Module mit von der Community erstellten Patches oder Patches, die direkt von NVIDIA geteilt werden.</p>
+
+<h2 id="faq">FAQ</h2>
+
+<h3 id="warum-wird-autofdo-nicht-für-alle-anderen-kernel-varianten-verwendet">Warum wird AutoFDO nicht für alle anderen Kernel-Varianten verwendet?</h3>
+
+<p>Weil das Erstellen teuer ist, da es im Grunde genommen erfordert, den Kernel zweimal zu bauen, was mehr Zeit und Ressourcen für die Kompilierung bedeutet. Der Prozess des Bauens eines Kernels mit AutoFDO umfasst die folgenden Schritte:</p>
+
+<p>1) Bauen des Kernels mit aktivierten AutoFDO- und Debugging-Funktionen.
+2) Erstellen eines Profils, d.h. Ausführen von Workloads, um Profildaten für mögliche Optimierungen zu sammeln.
+3) Erneutes Bauen des Kernels mit dem AutoFDO-Profil.</p>
+
+<p>Daher ist es vorerst nur in der <a href="/de/features/kernel#varianten">linux-cachyos</a>-Variante vorhanden.</p>
+
+<p>Für weitere Informationen über AutoFDO, klicke <a href="https://cachyos.org/blog/2411-kernel-autofdo/">hier.</a></p>
+
+<h3 id="verbessert-der-echtzeit-kernel-die-gaming-leistung">Verbessert der Echtzeit-Kernel die Gaming-Leistung?</h3>
+
+<p>Nein, das tut er nicht. Der Echtzeit-Kernel macht wesentlich mehr Code präemptiv im Vergleich zu einem normalen, vollständig präemptiven Kernel. Das bedeutet, dass viel mehr Aufgaben (einschließlich Gaming-Prozesse)
+häufig unterbrochen werden und Systemressourcen zwangsweise abgeben müssen, was zu einer schlechteren Leistung führt.</p>

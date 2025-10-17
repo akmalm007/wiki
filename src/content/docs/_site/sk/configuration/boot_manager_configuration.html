@@ -1,0 +1,87 @@
+<h2 id="systemd-boot">systemd-boot</h2>
+
+<p>systemd-boot má dva druhy konfiguračných súborov, jeden pre samotný systemd-boot v <code class="language-plaintext highlighter-rouge">/boot/loader/loader.conf</code> a jeden pre každú
+jednotlivú položku jadra v <code class="language-plaintext highlighter-rouge">/boot/loader/entry</code>.</p>
+
+<h3 id="konfigurácia-zavádzača">Konfigurácia zavádzača</h3>
+
+<p>V tomto konfiguračnom súbore môžete zmeniť predvolenú položku a časový limit systemd-boot</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /boot/loader/loader.conf</span>
+
+default @saved
+<span class="nb">timeout </span>5
+<span class="c">#console-mode keep # Táto možnosť konfiguruje rozlíšenie konzoly.</span>
+</code></pre></div></div>
+
+<h3 id="konfigurácia-príkazového-riadku-jadra">Konfigurácia príkazového riadku jadra</h3>
+
+<p>Poskytujeme nástroj na jednoduchšiu konfiguráciu systemd-boot <a href="https://github.com/CachyOS/CachyOS-PKGBUILDS/tree/master/systemd-boot-manager"><code class="language-plaintext highlighter-rouge">sdboot-manage</code></a>.
+Jednou z výhod tohto nástroja je globálna konfigurácia príkazového riadku jadra. Konfiguračný súbor pre <code class="language-plaintext highlighter-rouge">sdboot-manage</code> sa nachádza v <code class="language-plaintext highlighter-rouge">/etc/sdboot-manage.conf</code>.
+Upravte riadok <code class="language-plaintext highlighter-rouge">LINUX_OPTIONS=</code> v <code class="language-plaintext highlighter-rouge">/etc/sdboot-manage.conf</code> na zmenu parametrov jadra.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /etc/sdboot-manage.conf</span>
+<span class="nv">LINUX_OPTIONS</span><span class="o">=</span><span class="s2">"zswap.enabled=0 nowatchdog quiet splash"</span>
+</code></pre></div></div>
+
+<p>Po vykonaní zmien, znova vygenerujte všetky položky systemd-boot pomocou nasledujúceho príkazu</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❯ <span class="nb">sudo </span>sdboot-manage gen
+</code></pre></div></div>
+
+<h2 id="refind">rEFInd</h2>
+
+<p>Podobne ako <a href="/configuration/boot_manager_configuration#systemd-boot">systemd-boot</a>, aj rEFInd má dva konfiguračné súbory. <code class="language-plaintext highlighter-rouge">refind.conf</code> sa nachádza v
+<code class="language-plaintext highlighter-rouge">boot/efi/EFI/refind</code> a slúži hlavne na zmenu správania rEFInd, zatiaľ čo <code class="language-plaintext highlighter-rouge">/boot/refind_linux.conf</code> slúži na správu vašich možností spustenia.
+<code class="language-plaintext highlighter-rouge">refind.conf</code> obsahuje rozsiahle komentáre, ktoré vysvetľujú všetky jeho možnosti.</p>
+
+<h3 id="konfigurácia-príkazového-riadku-jadra-1">Konfigurácia príkazového riadku jadra</h3>
+
+<p>Ak chcete odovzdať parametre jadra do príkazového riadku, upravte “Boot using default options” v <code class="language-plaintext highlighter-rouge">/boot/refind_linux.conf</code></p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /boot/refind_linux.conf</span>
+
+<span class="s2">"Boot using default options"</span>     <span class="s2">"root=PARTUUID=1cb353ec-7f03-4820-8b4b-03baf53a208f rw zswap.enabled=0 nowatchdog quiet splash"</span>
+</code></pre></div></div>
+
+<p>Zmeny v oboch konfiguračných súboroch sa prejavia okamžite. Spúšťanie príkazu na “uloženie” zmien nie je potrebné.</p>
+
+<h2 id="grub">GRUB</h2>
+
+<p>Na rozdiel od <a href="/configuration/boot_manager_configuration#systemd-boot">systemd-boot</a> a <a href="/configuration/boot_manager_configuration#refind">rEFInd</a>,
+GRUB má iba jeden konfiguračný súbor, ktorý sa nachádza v <code class="language-plaintext highlighter-rouge">/etc/default/grub</code>. V tomto súbore je pomerne dobrá dokumentácia, ktorá vysvetľuje, čo
+každá možnosť robí.</p>
+
+<h3 id="skrytie-ponuky-zavádzania-grub">Skrytie ponuky zavádzania GRUB</h3>
+
+<p>Ak chcete skryť ponuku GRUB, jednoducho nastavte nasledujúce možnosti zodpovedajúcim spôsobom.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /etc/default/grub</span>
+
+<span class="nv">GRUB_TIMEOUT</span><span class="o">=</span><span class="s1">'0'</span>
+<span class="nv">GRUB_TIMEOUT_STYLE</span><span class="o">=</span>hidden
+</code></pre></div></div>
+
+<p>Stlačením klávesy ESC získate prístup k riadku GRUB. Odtiaľto spustite <code class="language-plaintext highlighter-rouge">normal</code> alebo <code class="language-plaintext highlighter-rouge">exit</code>, aby ste sa vrátili do známej ponuky zavádzania GRUB.</p>
+
+<h3 id="konfigurácia-príkazového-riadku-jadra-2">Konfigurácia príkazového riadku jadra</h3>
+
+<p>Ak chcete odovzdať parametre jadra do príkazového riadku pomocou GRUB, musíme upraviť <code class="language-plaintext highlighter-rouge">GRUB_CMDLINE_LINUX_DEFAULT</code> v rámci <code class="language-plaintext highlighter-rouge">/etc/default/grub</code></p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /etc/default/grub</span>
+
+<span class="nv">GRUB_CMDLINE_LINUX_DEFAULT</span><span class="o">=</span><span class="s1">'nowatchdog zswap.enabled=0 quiet splash'</span>
+</code></pre></div></div>
+
+<p>Zakaždým, keď upravíme konfiguračný súbor GRUB, musíme znova vytvoriť konfiguráciu pomocou nasledujúceho príkazu</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❯ <span class="nb">sudo </span>grub-mkconfig <span class="nt">-o</span> /boot/grub/grub.cfg
+</code></pre></div></div>
+
+<h2 id="zistite-viac">Zistite viac</h2>
+
+<ul>
+  <li><a href="https://man.archlinux.org/man/loader.conf.5">Manuálová stránka loader.conf</a></li>
+  <li><a href="https://www.rodsbooks.com/refind/configfile.html">rEFInd: Konfigurácia správcu zavádzania</a></li>
+  <li><a href="https://www.gnu.org/software/grub/manual/grub/grub.html#Configuration">Manuál GRUB: Konfigurácia</a></li>
+</ul>

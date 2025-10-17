@@ -1,0 +1,160 @@
+<h1 id="hw-akcelerace-pro-prohlížeče-založené-na-chromiu">HW akcelerace pro prohlížeče založené na Chromiu</h1>
+
+<p>Tento průvodce popisuje povolení hardwarové akcelerace v prohlížečích založených na Chromiu v CachyOS. Tím se úlohy spojené s videem/grafikou přesunou na vaši GPU, což zlepší výkon.</p>
+
+<h2 id="předpoklady">Předpoklady</h2>
+
+<ul>
+  <li><strong>Prohlížeč založený na Chromiu:</strong> (např. Chrome, Brave, Ungoogled Chromium, Edge)</li>
+  <li><strong>Ovladače/API pro GPU:</strong> Aktuální ovladače Mesa (AMD/Intel) nebo NVIDIA, s nakonfigurovaným Vulkanem/VA-API/VDPAU.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">amdgpu_top</code> (pro uživatele AMD):</strong> Nainstalujte <code class="language-plaintext highlighter-rouge">amdgpu_top</code> z repozitáře pomocí správce balíčků, pokud chcete sledovat aktivitu AMD GPU z terminálu.</li>
+</ul>
+
+<h2 id="příspěvek">Příspěvek</h2>
+
+<p>Tento průvodce je rozšiřitelný. Pokud máte funkční nastavení hardwarové akcelerace pro konkrétní GPU a prohlížeč založený na Chromiu, přispějte přidáním nové sekce pod “Konfigurace GPU a prohlížečů”. Uveďte:</p>
+
+<ul>
+  <li><strong>Název prohlížeče</strong></li>
+  <li><strong>Model GPU</strong></li>
+  <li><strong>Příznaky:</strong> Obsah souboru <code class="language-plaintext highlighter-rouge">~/.config/[prohlížeč]-flags.conf</code>.</li>
+  <li><strong>Cesta k souboru:</strong> Plná cesta k souboru s příznaky.</li>
+  <li><strong>Poznámky (volitelné):</strong> Klíčové ovladače, balíčky nebo specifika nastavení.</li>
+</ul>
+
+<h2 id="kroky-nastavení">Kroky nastavení</h2>
+
+<ol>
+  <li><strong>Identifikujte soubor s příznaky:</strong> Najděte cestu k souboru s příznaky vašeho prohlížeče v sekci “Konfigurace GPU a prohlížečů”.</li>
+  <li><strong>Upravte soubor s příznaky:</strong> Otevřete/vytvořte soubor pomocí <code class="language-plaintext highlighter-rouge">nano</code> (nebo vašeho preferovaného textového editoru jako <code class="language-plaintext highlighter-rouge">micro</code>, <code class="language-plaintext highlighter-rouge">vim</code>).
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nano <span class="o">[</span>CESTA_K_SOUBORU_S_PŘÍZNAKY_PROHLÍŽEČE]
+<span class="c"># Příklad: nano ~/.config/chrome-flags.conf</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Přidejte příznaky:</strong> Vložte příslušné příznaky pro GPU/prohlížeč do souboru.</li>
+  <li><strong>Uložte a zavřete.</strong></li>
+  <li><strong>Restartujte prohlížeč:</strong> Zavřete všechny instance prohlížeče a znovu jej spusťte.</li>
+  <li><strong>Ověřte:</strong> Přejděte na <code class="language-plaintext highlighter-rouge">chrome://gpu</code> (nebo <code class="language-plaintext highlighter-rouge">brave://gpu</code>, <code class="language-plaintext highlighter-rouge">edge://gpu</code> atd.). Potvrďte stav “Hardware accelerated” v sekcích “Video Acceleration Information” a “Graphics Feature Status”.</li>
+</ol>
+
+<h2 id="tipy-pro-ověření">Tipy pro ověření</h2>
+
+<p>Chcete-li si definitivně ověřit, zda je hardwarová akcelerace aktivní během přehrávání videa, použijte tyto metody:</p>
+
+<h3 id="1-zkontrolujte-využití-amd-gpu-amdgpu_top">1. Zkontrolujte využití AMD GPU (<code class="language-plaintext highlighter-rouge">amdgpu_top</code>)</h3>
+
+<p>Pokud máte AMD GPU a nainstalovaný <code class="language-plaintext highlighter-rouge">amdgpu_top</code>, otevřete terminál a spusťte jej:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>amdgpu_top
+</code></pre></div></div>
+
+<p>Zatímco se v prohlížeči přehrává video (např. na YouTube), sledujte sekci <code class="language-plaintext highlighter-rouge">media</code> v <code class="language-plaintext highlighter-rouge">amdgpu_top</code>. Měli byste zde vidět nějaké využití, což naznačuje, že mediální engine vaší GPU je aktivní. Pokud během přehrávání videa zůstává na 0 %, hardwarová akcelerace nemusí být pro dekódování plně zapojena.</p>
+
+<h3 id="2-zkontrolujte-nástroje-pro-vývojáře-v-prohlížeči-video-decoder">2. Zkontrolujte nástroje pro vývojáře v prohlížeči (Video Decoder)</h3>
+
+<p>Tato metoda poskytuje přímé potvrzení ze samotného prohlížeče:</p>
+
+<ol>
+  <li>
+    <p>Otevřete svůj prohlížeč založený na Chromiu.</p>
+  </li>
+  <li>
+    <p>Spusťte přehrávání videa (např. na YouTube nebo lokální soubor).</p>
+  </li>
+  <li>
+    <p>Otevřete Nástroje pro vývojáře: Stiskněte <code class="language-plaintext highlighter-rouge">F12</code> nebo <code class="language-plaintext highlighter-rouge">Ctrl+Shift+I</code>.</p>
+  </li>
+  <li>
+    <p>Přejděte na kartu <strong>Media</strong>. Pokud ji nevidíte, klikněte na tři tečky (<code class="language-plaintext highlighter-rouge">...</code>) nebo <code class="language-plaintext highlighter-rouge">&gt;&gt;</code> (Další karty) na nástrojové liště Nástrojů pro vývojáře a poté vyberte <code class="language-plaintext highlighter-rouge">Media</code>.</p>
+  </li>
+  <li>
+    <p>V sekci “Players” vlevo klikněte na položku odpovídající vašemu videu.</p>
+  </li>
+  <li>
+    <p>V hlavním panelu sjeďte dolů do sekce <strong>Video Decoder</strong>.</p>
+  </li>
+  <li>
+    <p>Hledejte štítek <code class="language-plaintext highlighter-rouge">Hardware decoder</code>. Měl by být <code class="language-plaintext highlighter-rouge">true</code>. Pokud je <code class="language-plaintext highlighter-rouge">false</code> nebo zobrazuje název softwarového dekodéru (např. <code class="language-plaintext highlighter-rouge">FFmpegVideoDecoder</code>, <code class="language-plaintext highlighter-rouge">VpxVideoDecoder</code>, <code class="language-plaintext highlighter-rouge">Dav1dVideoDecoder</code>), hardwarová akcelerace pro toto video není aktivní.</p>
+  </li>
+</ol>
+
+<h2 id="konfigurace-gpu-a-prohlížečů">Konfigurace GPU a prohlížečů</h2>
+
+<h3 id="amd-radeon-rx-6900-xt-google-chrome">AMD Radeon RX 6900 XT (Google Chrome)</h3>
+
+<ul>
+  <li>
+    <p><strong>Prohlížeč:</strong> Google Chrome</p>
+  </li>
+  <li>
+    <p><strong>GPU:</strong> AMD Radeon RX 6900 XT</p>
+  </li>
+  <li>
+    <p><strong>Soubor s příznaky:</strong> <code class="language-plaintext highlighter-rouge">~/.config/chrome-flags.conf</code></p>
+  </li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">--use-gl</span><span class="o">=</span>angle
+<span class="nt">--use-angle</span><span class="o">=</span>vulkan
+<span class="nt">--enable-features</span><span class="o">=</span>Vulkan,VulkanFromANGLE,DefaultANGLEVulkan,AcceleratedVideoDecodeLinuxZeroCopyGL,AcceleratedVideoEncoder,VaapiIgnoreDriverChecks,UseMultiPlaneFormatForHardwareVideo
+<span class="nt">--ozone-platform-hint</span><span class="o">=</span>x11
+</code></pre></div></div>
+
+<p><strong>Poznámky:</strong> Využívá Vulkan (přes ANGLE) a VA-API. <code class="language-plaintext highlighter-rouge">--ozone-platform-hint=x11</code> může být užitečné i na Waylandu pro určité cesty akcelerace.</p>
+
+<hr />
+
+<h3 id="šablona-pro-příspěvek">Šablona pro příspěvek</h3>
+
+<h3 id="váš-prohlížeč---váš-model-gpu-přispěla-vaše-jménopřezdívka">[Váš prohlížeč] - [Váš model GPU] (Přispěl/a [Vaše jméno/přezdívka])</h3>
+
+<ul>
+  <li>
+    <p><strong>Prohlížeč:</strong> [např. Brave, Ungoogled Chromium, Microsoft Edge, Vivaldi, Opera, Chromium]</p>
+  </li>
+  <li>
+    <p><strong>GPU:</strong> [např. NVIDIA GeForce RTX 3080, Intel Iris Xe]</p>
+  </li>
+  <li>
+    <p><strong>Cesta k souboru s příznaky:</strong> (Klíčové, liší se podle prohlížeče!)</p>
+
+    <ul>
+      <li>
+        <p><strong>Běžné cesty k <code class="language-plaintext highlighter-rouge">.conf</code>:</strong></p>
+
+        <ul>
+          <li>
+            <p><strong>Chromium:</strong> <code class="language-plaintext highlighter-rouge">~/.config/chromium-flags.conf</code></p>
+          </li>
+          <li>
+            <p><strong>Brave Browser:</strong> <code class="language-plaintext highlighter-rouge">~/.config/brave-browser-flags.conf</code></p>
+          </li>
+          <li>
+            <p><strong>Ungoogled Chromium:</strong> <code class="language-plaintext highlighter-rouge">~/.config/ungoogled-chromium-flags.conf</code></p>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p><strong>Úprava souboru <code class="language-plaintext highlighter-rouge">.desktop</code>:</strong> Některé prohlížeče (Brave, Edge, Vivaldi, Opera) mohou vyžadovat úpravu řádku <code class="language-plaintext highlighter-rouge">Exec=</code> v jejich souboru <code class="language-plaintext highlighter-rouge">.desktop</code> (nejprve zkopírujte z <code class="language-plaintext highlighter-rouge">/usr/share/applications/</code> do <code class="language-plaintext highlighter-rouge">~/.local/share/applications/</code>).</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>Obsah příznaků (pro soubor <code class="language-plaintext highlighter-rouge">.conf</code> nebo řádek <code class="language-plaintext highlighter-rouge">Exec=</code>):</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Zde vložte své příznaky.</span>
+<span class="c"># U souborů .desktop jsou příznaky odděleny mezerou za spustitelným souborem.</span>
+</code></pre></div></div>
+
+<p><strong>Poznámky (volitelné):</strong></p>
+
+<ul>
+  <li>
+    <p>Požadované ovladače (např. <code class="language-plaintext highlighter-rouge">nvidia-dkms</code>, <code class="language-plaintext highlighter-rouge">intel-media-driver</code>).</p>
+  </li>
+  <li>
+    <p>Specifické úvahy o nastavení nebo pokyny k úpravě souboru <code class="language-plaintext highlighter-rouge">.desktop</code>.</p>
+  </li>
+</ul>
+
