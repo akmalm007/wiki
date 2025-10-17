@@ -114,6 +114,12 @@ The `proton-cachyos` package from the CachyOS repositories is compiled against n
 - `PROTON_ENABLE_MEDIACONV=1`: Enables Proton Media Converter
   - **Note**: Testing purposes only
 
+#### AMD Anti-Lag
+- `ENABLE_LAYER_MESA_ANTI_LAG=1`: Enables AMD Anti-Lag for reduced input latency
+:::danger
+proton-cachyos disables this because it prevents FSR4 upgrades and can trigger stuttering or other issues ([details](https://github.com/CachyOS/CachyOS-PKGBUILDS/pull/909)).
+:::
+
 </TabItem>
 
 <TabItem label="Input & Compatibility">
@@ -202,16 +208,10 @@ If you encounter issues with games using **Easy Anti-Cheat** (EAC) or **BattlEye
 
 <Tabs>
 
-<TabItem label='Pacman'>
-```sh title='Run the following command'
-sudo pacman -S proton-cachyos-slr
-```
-</TabItem>
-
 <TabItem label='protonup'>
 
 <Steps>
-1. Install **protonup-qt**
+1. Open a terminal and install `protonup`
     ```sh
     sudo pacman -S protonup-qt
     ```
@@ -226,6 +226,12 @@ sudo pacman -S proton-cachyos-slr
 
 </Steps>
 
+</TabItem>
+
+<TabItem label='pacman'>
+```sh title='Run the following command'
+sudo pacman -S proton-cachyos-slr
+```
 </TabItem>
 
 </Tabs>
@@ -316,8 +322,6 @@ Laptop users with discrete NVIDIA GPUs should refer to the [Dual GPU Laptops gui
 :::tip
 CachyOS provides various Proton versions that we build & maintain for further performance improvements:
 - `proton-cachyos` `(included in the cachyos-gaming-meta package)` is the one that we develop with added QoL changes + cherry picked patches + compilation optimizations `(x86-64-v3 & x86-64-v4)`
-- `proton-ge-custom`, `proton-tkg-git`, `proton-experimental` and `proton stable releases` are built against native libs.
-- `proton-ge-custom-bin` pulled from AUR.
 :::
 
 :::tip
